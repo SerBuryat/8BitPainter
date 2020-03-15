@@ -1,17 +1,59 @@
 package com.thunderTECH.Painter8Bit.panels.painter;
 
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class InstrumentPane extends GridPane {
+    private final PaintPane paintPane;
+    private final Color[] colors = {Color.WHITE, Color.LIGHTGRAY, Color.YELLOW, Color.GREENYELLOW, Color.GREEN,
+                              Color.BROWN, Color.RED, Color.PURPLE, Color.BLUE, Color.INDIGO, Color.BLACK};
 
-    public InstrumentPane() {
-        Button button1 = new Button("btn1");
-        Button button2 = new Button("btn2");
-        Button button3 = new Button("btn3");
+    public InstrumentPane(PaintPane paintPane) {
+        this.paintPane = paintPane;
 
-        this.add(button1,0,0);
-        this.add(button2,0,1);
-        this.add(button3,0,2);
+        Text text = new Text("Colors :");
+        text.setFont(Font.font("Verdana", 20));
+
+        loadNodesOnPane(text, getRectanglesArray(colors.length));
+
+
+        this.setPadding(new Insets(20,20,20,20));
     }
+
+    private Rectangle[] getRectanglesArray(int length) {
+        Rectangle[] rectangles = new Rectangle[length];
+        for(int i = 0; i < length; i++) {
+            rectangles[i] = createRect(40, 40, colors[i], Color.GRAY);
+        }
+        return rectangles;
+    }
+
+    private void loadNodesOnPane(Text text, Rectangle[] rectangles) {
+
+        this.add(text, 0, 0);
+
+        for(int i = 0; i < rectangles.length; i++)
+            this.add(rectangles[i], 0, i+1);
+
+    }
+
+    private Rectangle createRect(int width, int height, Color fillColor, Color strokeColor) {
+        Rectangle rect = new Rectangle(width, height);
+        rect.setFill(fillColor);
+        rect.setStroke(strokeColor);
+
+        rect.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY) {
+                paintPane.setCurrentRectColor((Color) rect.getFill());
+            }
+        });
+
+        return rect;
+    }
+
 }
