@@ -3,9 +3,10 @@ package com.thunderTECH.Painter8Bit.panels.painter;
 import com.thunderTECH.Painter8Bit.Painter;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -40,7 +41,7 @@ public class PaintPane extends GridPane {
         rectanglesGrid = getRectanglesGridArray(gridWidth, gridHeight);
 
         currentRectColor = Color.BLACK;
-        clearRectColor = Color.WHITE;
+        clearRectColor = Color.TRANSPARENT;
 
         /*this.setOnMouseDragged(event -> {
             int rectX = (int) (event.getX() / rectWidth);
@@ -69,8 +70,8 @@ public class PaintPane extends GridPane {
         if(file != null){
             try {
                 //Pad the capture area
-                WritableImage writableImage = new WritableImage((int)getWidth() + 20,
-                        (int)getHeight() + 20);
+                WritableImage writableImage = new WritableImage((int)getWidth(),
+                        (int)getHeight());
 
                 // parameters for remove background
                 SnapshotParameters sp = new SnapshotParameters();
@@ -84,12 +85,27 @@ public class PaintPane extends GridPane {
         }
     }
 
+    public void loadImageToPaintPane() {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+
+        if(file != null){
+            Image loadedImage = new Image(file.toURI().toString());
+
+            BackgroundSize backgroundSize = new BackgroundSize(this.getWidth(), this.getHeight(), true, true, true, true);
+            BackgroundImage backgroundImage = new BackgroundImage(loadedImage, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+
+            this.setBackground(new Background(backgroundImage));
+        }
+    }
+
     public void clearPaintPane() {
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
-                repaintRect(rectanglesGrid[x][y], Color.TRANSPARENT);
+                repaintRect(rectanglesGrid[x][y], clearRectColor);
             }
         }
+        this.setBackground(null);
     }
 
     private Rectangle[][] getRectanglesGridArray(int gridWidth, int gridHeight) {
