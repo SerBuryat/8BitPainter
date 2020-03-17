@@ -5,8 +5,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+
 
 public class InstrumentPane extends GridPane {
     private final PaintPane paintPane;
@@ -16,10 +15,7 @@ public class InstrumentPane extends GridPane {
     public InstrumentPane(PaintPane paintPane) {
         this.paintPane = paintPane;
 
-        Text text = new Text("Colors :");
-        text.setFont(Font.font("Verdana", 20));
-
-        loadNodesOnPane(text, getRectanglesArray(colors.length));
+        loadNodesOnPane(getRectanglesArray(colors.length));
 
 
         this.setPadding(new Insets(20,20,20,20));
@@ -33,12 +29,10 @@ public class InstrumentPane extends GridPane {
         return rectangles;
     }
 
-    private void loadNodesOnPane(Text text, Rectangle[] rectangles) {
-
-        this.add(text, 0, 0);
+    private void loadNodesOnPane(Rectangle[] rectangles) {
 
         for(int i = 0; i < rectangles.length; i++)
-            this.add(rectangles[i], 0, i+1);
+            this.add(rectangles[i], 0, i);
 
     }
 
