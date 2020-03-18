@@ -9,8 +9,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Painter extends Application {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 720;
 
     @Override
     public void start(Stage stage) {

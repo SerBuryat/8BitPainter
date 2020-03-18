@@ -6,40 +6,56 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 
 public class InstrumentPane extends GridPane {
     private final PaintPane paintPane;
-    private final Color[] colors = {Color.WHITE, Color.LIGHTGRAY, Color.YELLOW, Color.GREENYELLOW, Color.GREEN,
-                              Color.BROWN, Color.RED, Color.PURPLE, Color.BLUE, Color.INDIGO, Color.BLACK};
+    private final ArrayList<Color> colors;
 
     public InstrumentPane(PaintPane paintPane) {
         this.paintPane = paintPane;
 
-        loadNodesOnPane(getRectanglesArray(colors.length));
+        int rectWidth = 20;
+        int rectHeight = 20;
+
+        colors = getColorsList();
+
+        loadPalletOnPane(getRectanglesList(colors.size(), rectWidth, rectHeight));
 
 
         this.setPadding(new Insets(20,20,20,20));
     }
 
-    private Rectangle[] getRectanglesArray(int length) {
-        Rectangle[] rectangles = new Rectangle[length];
-        for(int i = 0; i < length; i++) {
-            rectangles[i] = createRect(40, 40, colors[i], Color.GRAY);
+    private ArrayList<Color> getColorsList() {
+        ArrayList<Color> colorsList = new ArrayList<>();
+
+        int[] colorModifier = {255, 192, 128, 64, 0};
+
+        for (int r : colorModifier) {
+            for (int g : colorModifier) {
+                for (int b : colorModifier) {
+                    colorsList.add(Color.rgb(r, g, b));
+                }
+            }
         }
-        return rectangles;
+
+        return colorsList;
     }
 
-    private void loadNodesOnPane(Rectangle[] rectangles) {
+    private ArrayList<Rectangle> getRectanglesList(int colorsSize, int rectWidth, int rectHeight) {
+        ArrayList<Rectangle> rectanglesList = new ArrayList<>(colorsSize);
 
-        for(int i = 0; i < rectangles.length; i++)
-            this.add(rectangles[i], 0, i);
+        for (int i = 0; i < colorsSize; i++)
+            rectanglesList.add(createRect(rectWidth, rectHeight, colors.get(i)));
 
+        return rectanglesList;
     }
 
-    private Rectangle createRect(int width, int height, Color fillColor, Color strokeColor) {
+    private Rectangle createRect(int width, int height, Color fillColor) {
         Rectangle rect = new Rectangle(width, height);
         rect.setFill(fillColor);
-        rect.setStroke(strokeColor);
+        rect.setStroke(Color.LIGHTGRAY);
 
         rect.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.PRIMARY) {
@@ -48,6 +64,17 @@ public class InstrumentPane extends GridPane {
         });
 
         return rect;
+    }
+
+    private void loadPalletOnPane(ArrayList<Rectangle> rectanglesList) {
+        int colSize = 25;
+        int rowSize = 25;
+
+        for(int i = 0; i < rectanglesList.size(); i++) {
+            int row = (i < colSize ? i : i % colSize);
+            int col = i / rowSize;
+            this.add(rectanglesList.get(i), col, row);
+        }
     }
 
 }

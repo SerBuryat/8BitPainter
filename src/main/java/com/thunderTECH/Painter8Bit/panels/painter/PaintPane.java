@@ -28,7 +28,6 @@ public class PaintPane extends GridPane {
     final int gridHeight;
 
     final int rectWidth;
-
     final int rectHeight;
 
     public PaintPane(int paneWidth, int paneHeight) {
