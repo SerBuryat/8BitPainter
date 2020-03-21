@@ -1,17 +1,20 @@
 package com.thunderTECH.Painter8Bit.panels.painter;
 
+import com.thunderTECH.Painter8Bit.ColorsGenerator;
 import javafx.geometry.Insets;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class InstrumentPane extends GridPane {
     private final PaintPane paintPane;
-    private final ArrayList<Color> colors;
+    private final List<Color> colors;
 
     public InstrumentPane(PaintPane paintPane) {
         this.paintPane = paintPane;
@@ -27,24 +30,32 @@ public class InstrumentPane extends GridPane {
         this.setPadding(new Insets(20,20,20,20));
     }
 
-    private ArrayList<Color> getColorsList() {
-        ArrayList<Color> colorsList = new ArrayList<>();
+    private List<Color> getColorsList() {
+        List<Color> colorsList = new ArrayList<>();
 
-        int[] colorModifier = {255, 192, 128, 64, 0};
+        int brightnessLevel = 4;
 
-        for (int r : colorModifier) {
-            for (int g : colorModifier) {
-                for (int b : colorModifier) {
-                    colorsList.add(Color.rgb(r, g, b));
-                }
-            }
+        for (int i = brightnessLevel; i > 0; i--) {
+            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALLET());
+            List<Color> brighterColors = ColorsGenerator.BRIGHTER_COLORS_LIST(tmpColors, i);
+            colorsList.addAll(brighterColors);
+        }
+
+        colorsList.addAll(ColorsGenerator.GET_24_COLOR_PALLET());
+
+        int darknessLevel = 4;
+
+        for (int i = 0; i < darknessLevel; i++) {
+            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALLET());
+            List<Color> darkerColors = ColorsGenerator.DARKER_COLORS_LIST(tmpColors, i);
+            colorsList.addAll(darkerColors);
         }
 
         return colorsList;
     }
 
-    private ArrayList<Rectangle> getRectanglesList(int colorsSize, int rectWidth, int rectHeight) {
-        ArrayList<Rectangle> rectanglesList = new ArrayList<>(colorsSize);
+    private List<Rectangle> getRectanglesList(int colorsSize, int rectWidth, int rectHeight) {
+        List<Rectangle> rectanglesList = new ArrayList<>(colorsSize);
 
         for (int i = 0; i < colorsSize; i++)
             rectanglesList.add(createRect(rectWidth, rectHeight, colors.get(i)));
@@ -66,13 +77,14 @@ public class InstrumentPane extends GridPane {
         return rect;
     }
 
-    private void loadPalletOnPane(ArrayList<Rectangle> rectanglesList) {
-        int colSize = 25;
-        int rowSize = 25;
+    private void loadPalletOnPane(List<Rectangle> rectanglesList) {
+        // 24 main colors
+        int colSize = 24;
+        int rowSize = 24;
 
         for(int i = 0; i < rectanglesList.size(); i++) {
-            int row = (i < colSize ? i : i % colSize);
-            int col = i / rowSize;
+            int row = (i < rowSize ? i : i % rowSize);
+            int col = i / colSize;
             this.add(rectanglesList.get(i), col, row);
         }
     }
