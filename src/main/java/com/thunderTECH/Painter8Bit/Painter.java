@@ -1,6 +1,6 @@
 package com.thunderTECH.Painter8Bit;
 
-import com.thunderTECH.Painter8Bit.panels.painter.InstrumentPane;
+import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
 import com.thunderTECH.Painter8Bit.panels.painter.SettingsPanel;
 import javafx.application.Application;

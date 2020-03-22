@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorsGenerator {
-    private final static int[] COLOR_MODIFIER = {255, 192, 128, 64, 0};
 
-    public static List<Color> GET_24_COLOR_PALLET() {
+    public static List<Color> GET_24_COLOR_PALETTE() {
         List<Color> colorsPalletList = new ArrayList<>();
 
         colorsPalletList.addAll(RED_GREEN_COLORS_LIST());
@@ -16,6 +15,19 @@ public class ColorsGenerator {
         colorsPalletList.addAll(BLUE_RED_COLORS_LIST());
 
         return colorsPalletList;
+    }
+
+    public static List<Color> GET_WHITE_BLACK_COLOR_PALETTE() {
+        ArrayList<Color> whiteBlackColorsList = new ArrayList<>();
+        whiteBlackColorsList.add(Color.rgb(255,255,255));
+
+        int colorMod = 256;
+        int step = 16;
+
+        for(int i = colorMod-step; i > 0; i-=step) // skip white (already added)
+            whiteBlackColorsList.add(Color.rgb(i,i,i));
+
+        return whiteBlackColorsList;
     }
 
     public static List<Color> BRIGHTER_COLORS_LIST(List<Color> colorsList, int brightnessLevel) {
@@ -41,7 +53,6 @@ public class ColorsGenerator {
             darkerColorsList.forEach(color -> tmpColorsList.add(color.darker()));
 
             darkerColorsList = new ArrayList<>(tmpColorsList);
-
             darknessLevel--;
         }
 
@@ -49,7 +60,7 @@ public class ColorsGenerator {
     }
 
     private static List<Color> RED_GREEN_COLORS_LIST() {
-        ArrayList<Color> redGreenColorsList = new ArrayList<>();
+        List<Color> redGreenColorsList = new ArrayList<>();
 
         redGreenColorsList.add(Color.rgb(255,0,0));
         redGreenColorsList.add(Color.rgb(255,64,0));
@@ -65,7 +76,7 @@ public class ColorsGenerator {
     }
 
     private static List<Color> GREEN_BLUE_COLORS_LIST() {
-        ArrayList<Color> greenBlueColorsList = new ArrayList<>();
+        List<Color> greenBlueColorsList = new ArrayList<>();
 
         greenBlueColorsList.add(Color.rgb(0,255,0));
         greenBlueColorsList.add(Color.rgb(0,255,64));

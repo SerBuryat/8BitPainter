@@ -1,8 +1,8 @@
-package com.thunderTECH.Painter8Bit.panels.painter;
+package com.thunderTECH.Painter8Bit.panels.instruments;
 
 import com.thunderTECH.Painter8Bit.ColorsGenerator;
+import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
 import javafx.geometry.Insets;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -11,12 +11,11 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class InstrumentPane extends GridPane {
+public class ColorsPalette extends GridPane {
     private final PaintPane paintPane;
     private final List<Color> colors;
 
-    public InstrumentPane(PaintPane paintPane) {
+    public ColorsPalette(PaintPane paintPane) {
         this.paintPane = paintPane;
 
         int rectWidth = 20;
@@ -31,25 +30,26 @@ public class InstrumentPane extends GridPane {
     }
 
     private List<Color> getColorsList() {
+
         List<Color> colorsList = new ArrayList<>();
 
         int brightnessLevel = 4;
 
         for (int i = brightnessLevel; i > 0; i--) {
-            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALLET());
+            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALETTE());
             List<Color> brighterColors = ColorsGenerator.BRIGHTER_COLORS_LIST(tmpColors, i);
             colorsList.addAll(brighterColors);
         }
 
-        colorsList.addAll(ColorsGenerator.GET_24_COLOR_PALLET());
-
-        int darknessLevel = 4;
+        int darknessLevel = 5; // 0 is original color level
 
         for (int i = 0; i < darknessLevel; i++) {
-            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALLET());
+            List<Color> tmpColors = new ArrayList<>(ColorsGenerator.GET_24_COLOR_PALETTE());
             List<Color> darkerColors = ColorsGenerator.DARKER_COLORS_LIST(tmpColors, i);
             colorsList.addAll(darkerColors);
         }
+
+        colorsList.addAll(ColorsGenerator.GET_WHITE_BLACK_COLOR_PALETTE());
 
         return colorsList;
     }
@@ -66,7 +66,9 @@ public class InstrumentPane extends GridPane {
     private Rectangle createRect(int width, int height, Color fillColor) {
         Rectangle rect = new Rectangle(width, height);
         rect.setFill(fillColor);
-        rect.setStroke(Color.LIGHTGRAY);
+
+        rect.setStroke(Color.BLACK);
+        rect.setStrokeWidth(0.5);
 
         rect.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.PRIMARY) {
@@ -88,5 +90,4 @@ public class InstrumentPane extends GridPane {
             this.add(rectanglesList.get(i), col, row);
         }
     }
-
 }
