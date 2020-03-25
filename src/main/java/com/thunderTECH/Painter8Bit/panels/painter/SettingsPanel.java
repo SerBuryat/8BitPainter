@@ -13,10 +13,10 @@ public class SettingsPanel extends GridPane {
         Button saveImageButton = new Button("Save image as...");
         saveImageButton.setPadding(new Insets(10,10,10,10));
         saveImageButton.setOnAction(event -> {
-            if(paintPane.isGridStrokesShow()) {
-                paintPane.setGridStrokesShow(false);
+            if(paintPane.isGridLinesVisible()) {
+                paintPane.setGridLinesVisible(false);
                 paintPane.saveImageFromPaintPane();
-                paintPane.setGridStrokesShow(true);
+                paintPane.setGridLinesVisible(true);
             } else
                 paintPane.saveImageFromPaintPane();
         });
@@ -31,9 +31,9 @@ public class SettingsPanel extends GridPane {
 
         CheckBox isGridStrokesShowCheckBox = new CheckBox("Show paint grid");
         isGridStrokesShowCheckBox.setPadding(new Insets(10,10,10,10));
-        isGridStrokesShowCheckBox.setSelected(paintPane.isGridStrokesShow());
+        isGridStrokesShowCheckBox.setSelected(paintPane.isGridLinesVisible());
         isGridStrokesShowCheckBox.setOnAction(event ->
-                paintPane.setGridStrokesShow(isGridStrokesShowCheckBox.isSelected()));
+                paintPane.setGridLinesVisible(isGridStrokesShowCheckBox.isSelected()));
 
         this.setPadding(new Insets(10,10,10,10));
 

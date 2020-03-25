@@ -1,6 +1,7 @@
 package com.thunderTECH.Painter8Bit.panels.painter;
 
 import com.thunderTECH.Painter8Bit.Painter;
+import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -18,7 +19,6 @@ import java.io.IOException;
 
 public class PaintPane extends GridPane {
     private final Rectangle[][] rectanglesGrid;
-    private boolean isGridStrokesShow;
     private final Color gridStrokeColor;
 
     private Color currentRectColor;
@@ -47,8 +47,6 @@ public class PaintPane extends GridPane {
 
         gridStrokeColor = Color.BLACK;
 
-        setGridStrokesShow(false);
-
         /*this.setOnMouseDragged(event -> {
             int rectX = (int) (event.getX() / rectWidth);
             int rectY = (int) (event.getY() / rectHeight);
@@ -64,28 +62,8 @@ public class PaintPane extends GridPane {
         currentRectColor = rectColor;
     }
 
-    public void setGridStrokesShow(boolean gridStrokesShow) {
-        isGridStrokesShow = gridStrokesShow;
-
-        if(gridStrokesShow) {
-            for(int x = 0; x < gridWidth; x++) {
-                for(int y = 0; y < gridHeight; y++) {
-                    rectanglesGrid[x][y].setStroke(gridStrokeColor);
-                    rectanglesGrid[x][y].setStrokeWidth(0.1);
-                }
-            }
-        } else {
-            for(int x = 0; x < gridWidth; x++) {
-                for(int y = 0; y < gridHeight; y++) {
-                    rectanglesGrid[x][y].setStroke(rectanglesGrid[x][y].getFill());
-                    rectanglesGrid[x][y].setStrokeWidth(1);
-                }
-            }
-        }
-    }
-
-    public boolean isGridStrokesShow() {
-        return isGridStrokesShow;
+    public Color getCurrentRectColor() {
+        return currentRectColor;
     }
 
     public void saveImageFromPaintPane() {
@@ -167,8 +145,10 @@ public class PaintPane extends GridPane {
 
     private void addClickMouseActionForRectColorRepaint(Rectangle rect) {
         rect.setOnMousePressed(event -> {
-            if(event.getButton() == MouseButton.PRIMARY)
+            if(event.getButton() == MouseButton.PRIMARY) {
                 repaintRect(rect, currentRectColor);
+                InstrumentPane.ADD_LAST_USED_COLOR(currentRectColor);
+            }
             if(event.getButton() == MouseButton.SECONDARY)
                 repaintRect(rect, Color.TRANSPARENT);
         });
@@ -176,7 +156,7 @@ public class PaintPane extends GridPane {
 
     private void repaintRect(Rectangle rect, Color currentRectColor) {
         rect.setFill(currentRectColor);
-        rect.setStroke(isGridStrokesShow ? gridStrokeColor : currentRectColor);
+        rect.setStroke(this.isGridLinesVisible() ? gridStrokeColor : currentRectColor);
     }
 
 }
