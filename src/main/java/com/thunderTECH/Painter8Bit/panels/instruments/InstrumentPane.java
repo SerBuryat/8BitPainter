@@ -20,18 +20,32 @@ public class InstrumentPane extends BorderPane {
 
     public InstrumentPane(PaintPane paintPane) {
 
-        ColorPicker colorPicker = new ColorPicker();// colorPicker
-        colorPicker.setOnAction(action -> {
-            paintPane.setCurrentRectColor(colorPicker.getValue());
-        });
-        this.setTop(colorPicker);
+        this.setTop(getColorPicker(paintPane));
 
+        this.setCenter(new ColorsPalette(paintPane));
 
+        this.setBottom(getLastUsedColorsPane(paintPane));
 
-        this.setCenter(new ColorsPalette(paintPane));// colorPalletPane
+        this.setPadding(new Insets(20,20,20,20));
+    }
 
+    public static void ADD_LAST_USED_COLOR(Color color) {
+        Color lastColor = (Color) lastColorsRectanglesList.get(0).getFill();
+        if(lastColor != color && !IS_COLOR_IN_LAST_COLORS_LIST(color, lastColorsRectanglesList)) {
+            for(int i = lastColorsRectanglesList.size()-1; i > 0; i--) {
+                lastColorsRectanglesList.get(i).setFill(lastColorsRectanglesList.get(i-1).getFill());
+            }
+            lastColorsRectanglesList.get(0).setFill(color);
+        }
+    }
 
+    private static boolean IS_COLOR_IN_LAST_COLORS_LIST(Color color, List<Rectangle> lastUsedColorsList) {
 
+        return lastUsedColorsList.stream()
+                .anyMatch(rectangle -> rectangle.getFill() == color);
+    }
+
+    private BorderPane getLastUsedColorsPane(PaintPane paintPane) {
         BorderPane lastUsedColorsPane = new BorderPane(); // lastUsedColorsPane
 
         lastUsedColorsPane.setTop(new Label("Last used colors: "));
@@ -44,6 +58,7 @@ public class InstrumentPane extends BorderPane {
             lastColorsRectanglesList.add(new Rectangle(20,20));
             colorsPane.add(lastColorsRectanglesList.get(i), i , 0);
         }
+
         lastColorsRectanglesList.forEach(rect -> {
             rect.setFill(Color.WHITE);
             rect.setStroke(Color.BLACK);
@@ -55,20 +70,17 @@ public class InstrumentPane extends BorderPane {
             });
         });
 
-        this.setBottom(lastUsedColorsPane);
-
-
-
-        this.setPadding(new Insets(20,20,20,20));
+        return lastUsedColorsPane;
     }
 
-    public static void ADD_LAST_USED_COLOR(Color color) {
-        if(lastColorsRectanglesList.get(0).getFill() != color) {
-            for(int i = lastColorsRectanglesList.size()-1; i > 0; i--) {
-                lastColorsRectanglesList.get(i).setFill(lastColorsRectanglesList.get(i-1).getFill());
-            }
-            lastColorsRectanglesList.get(0).setFill(color);
-        }
+    private ColorPicker getColorPicker(PaintPane paintPane) {
+        ColorPicker colorPicker = new ColorPicker();// colorPicker
+        colorPicker.setOnAction(action -> {
+            paintPane.setCurrentRectColor(colorPicker.getValue());
+        });
+
+        return colorPicker;
     }
+
 
 }

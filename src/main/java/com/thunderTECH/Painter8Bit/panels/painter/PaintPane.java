@@ -122,7 +122,7 @@ public class PaintPane extends GridPane {
             for(int y = 0; y < gridHeight; y++) {
                 Rectangle rect = createRect(x, y, rectWidth, rectHeight);
 
-                addClickMouseActionForRectColorRepaint(rect);
+                addMouseActionForRect(rect);
 
                 rectangles[x][y] = rect;
                 this.add(rect, x, y);
@@ -143,14 +143,14 @@ public class PaintPane extends GridPane {
         return rect;
     }
 
-    private void addClickMouseActionForRectColorRepaint(Rectangle rect) {
+    private void addMouseActionForRect(Rectangle rect) {
         rect.setOnMousePressed(event -> {
             if(event.getButton() == MouseButton.PRIMARY) {
                 repaintRect(rect, currentRectColor);
                 InstrumentPane.ADD_LAST_USED_COLOR(currentRectColor);
             }
             if(event.getButton() == MouseButton.SECONDARY)
-                repaintRect(rect, Color.TRANSPARENT);
+                this.setCurrentRectColor((Color) rect.getFill());
         });
     }
 
