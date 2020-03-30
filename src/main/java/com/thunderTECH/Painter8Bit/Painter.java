@@ -9,8 +9,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Painter extends Application {
-    public static final int WIDTH = 1024;
-    public static final int HEIGHT = 720;
 
     @Override
     public void start(Stage stage) {
@@ -27,7 +25,7 @@ public class Painter extends Application {
     private BorderPane getMainPane() {
         BorderPane mainPane = new BorderPane();
 
-        PaintPane paintPane = new PaintPane(WIDTH, HEIGHT);
+        PaintPane paintPane = new PaintPane();
         InstrumentPane instrumentPane = new InstrumentPane(paintPane);
         SettingsPanel settingsPanel = new SettingsPanel(paintPane);
 

@@ -68,7 +68,9 @@ public class SettingsPanel extends GridPane {
             alert.setHeaderText("Help");
             alert.setContentText("Right click -> draw rectangle; "
                     + "\n"
-                    + "Left click -> 'take' color from rectangle;");
+                    + "Left click -> 'take' color from rectangle;"
+                    + "\n"
+                    + "Middle click -> center paint pane (get back size and scale);");
 
             alert.showAndWait();
         });
