@@ -66,11 +66,15 @@ public class SettingsPanel extends GridPane {
         showHelpButton.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Help");
-            alert.setContentText("Right click -> draw rectangle; "
+            alert.setContentText("Right mouse button (click) -> draw rectangle; "
                     + "\n"
-                    + "Left click -> 'take' color from rectangle;"
+                    +"Right mouse button (pressed&moved) -> draw line of rectangles on the way of moving; "
                     + "\n"
-                    + "Middle click -> center paint pane (get back size and scale);");
+                    + "Left mouse button (click) -> 'take' color from rectangle;"
+                    + "\n"
+                    + "Middle mouse button (pressed&moved) -> allow to move paintPane ;"
+                    + "\n"
+                    + "Middle mouse button (scrolling) -> allow to scrolling(zooming) paintPane ;");
 
             alert.showAndWait();
         });
