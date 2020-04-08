@@ -1,6 +1,7 @@
 package com.thunderTECH.Painter8Bit.panels.painter;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -16,12 +17,14 @@ public class SettingsPanel extends GridPane {
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPaintPaneButton(paintPane),2,0);
         this.add(getGridStrokesShowCheckBox(paintPane), 3, 0);
-        this.add(getShowHelpButton(), 4, 0);
+        this.add(getDefaultSizeOfPaintPane(paintPane),4,0);
+        this.add(getShowHelpButton(), 5, 0);
     }
 
     private Button getSaveImageButton(PaintPane paintPane) {
         Button saveImageButton = new Button("Save image as...");
         saveImageButton.setPadding(new Insets(10,10,10,10));
+
         saveImageButton.setOnAction(event -> {
             if(paintPane.isGridLinesVisible()) {
                 paintPane.setGridLinesVisible(false);
@@ -58,6 +61,16 @@ public class SettingsPanel extends GridPane {
                 paintPane.setGridLinesVisible(gridStrokesShowCheckBox.isSelected()));
 
         return gridStrokesShowCheckBox;
+    }
+
+    private Button getDefaultSizeOfPaintPane(PaintPane paintPane) {
+        Button defaultSizePaintPaneButton = new Button("paintPane default size ");
+
+        defaultSizePaintPaneButton.setOnAction(action -> {
+            paintPane.setPaintPaneDefaultSize();
+        });
+
+        return defaultSizePaintPaneButton;
     }
 
     private Button getShowHelpButton() {

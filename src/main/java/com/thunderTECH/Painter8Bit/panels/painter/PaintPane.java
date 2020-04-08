@@ -2,12 +2,14 @@ package com.thunderTECH.Painter8Bit.panels.painter;
 
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
@@ -18,19 +20,24 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class PaintPane extends GridPane {
+public class PaintPane extends Canvas {
     private final Rectangle[][] rectanglesGrid;
 
-    private final int paintPaneWidth = 1280;
-    private final int paintPaneHeight = 720;
+    private final GraphicsContext graphic;
+
+    private final int paintPaneWidth = 1360;
+    private final int paintPaneHeight = 900;
 
     private final int paintPaneRectWidth = 10;
     private final int paintPaneRectHeight = 10;
 
-    final int gridWidth;
-    final int gridHeight;
+    private final int gridWidth;
+    private final int gridHeight;
 
     private Color currentRectColor;
+
+    private boolean isGridLinesVisible;
+    private final Color paintPaneGridStrokeColor;
 
     // vars for move&drag paintPane
     private double paneDragX;
@@ -39,8 +46,12 @@ public class PaintPane extends GridPane {
     private double paneTranslateX;
     private double paneTranslateY;
 
+    //vars for scaling paintPane
+    private Scale paintPaneScale;
 
     public PaintPane() {
+        graphic = this.getGraphicsContext2D();
+
         this.setWidth(paintPaneWidth);
         this.setHeight(paintPaneHeight);
 
@@ -51,11 +62,49 @@ public class PaintPane extends GridPane {
 
         currentRectColor = Color.BLACK;
 
-        this.setGridLinesVisible(true);
-
+        this.loadMouseActionsPaintPaneActionGroup(this);
         this.loadScrollingPaintPaneActionGroup(this);
-        this.loadDraggingPaintPaneActionGroup(this);
 
+        isGridLinesVisible = false;
+        paintPaneGridStrokeColor = Color.GRAY;
+
+        this.setCursor(Cursor.CROSSHAIR);
+    }
+
+    public void setPaintPaneDefaultSize() {
+        this.getTransforms().clear();
+        this.setTranslateX(0.0);
+        this.setTranslateY(0.0);
+    }
+
+    public void setGridLinesVisible(boolean paintPaneGridVisible) {
+        isGridLinesVisible = paintPaneGridVisible;
+
+        if(paintPaneGridVisible) {
+            for(int x = 0; x < gridWidth; x++) {
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+
+                    graphic.setStroke(paintPaneGridStrokeColor);
+                    graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                }
+            }
+        } else {
+            for(int x = 0; x < gridWidth; x++) {
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+
+                    if(rect.getFill() == Color.TRANSPARENT)
+                        graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                    else
+                        this.paintRect(rect,(Color)rect.getFill());
+                }
+            }
+        }
+    }
+
+    public boolean isGridLinesVisible() {
+        return isGridLinesVisible;
     }
 
     public void setCurrentRectColor(Color rectColor) {
@@ -74,11 +123,12 @@ public class PaintPane extends GridPane {
         if(file != null){
             try {
                 //Pad the capture area
-                WritableImage writableImage = new WritableImage((int)getWidth(),
-                        (int)getHeight());
+                WritableImage writableImage = new WritableImage((int)this.getWidth(), (int)this.getHeight());
 
                 // parameters for remove background
                 SnapshotParameters sp = new SnapshotParameters();
+                //minX-6, minY-67 -> without this Viewport of snapshot will be incorrect(i don't know why)
+                sp.setViewport(new Rectangle2D(6,67,this.getWidth(),this.getHeight()));
                 sp.setFill(Color.TRANSPARENT);
 
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(snapshot(sp, writableImage), null);
@@ -95,33 +145,43 @@ public class PaintPane extends GridPane {
 
         if(file != null){
             Image loadedImage = new Image(file.toURI().toString());
-
-            BackgroundSize backgroundSize = new BackgroundSize(this.getWidth(), this.getHeight(), true, true, true, true);
-            BackgroundImage backgroundImage = new BackgroundImage(loadedImage, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
-
-            this.setBackground(new Background(backgroundImage));
+            graphic.drawImage(loadedImage,0,0,this.getWidth(),this.getHeight());
         }
     }
 
     public void clearPaintPane() {
-        for(int x = 0; x < gridWidth; x++) {
-            for(int y = 0; y < gridHeight; y++) {
-                repaintRect(rectanglesGrid[x][y], Color.TRANSPARENT);
+        if(isGridLinesVisible) {
+            for(int x = 0; x < gridWidth; x++) {
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+
+                    paintRect(rect,Color.TRANSPARENT);
+
+                    graphic.setStroke(paintPaneGridStrokeColor);
+                    graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                }
+            }
+        } else {
+            for(int x = 0; x < gridWidth; x++) {
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+                    rect.setFill(Color.TRANSPARENT);
+                    graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                }
             }
         }
-        this.setBackground(null);
     }
 
     private Rectangle[][] getRectanglesGridArray(int gridWidth, int gridHeight) {
         Rectangle[][] rectangles = new Rectangle[gridWidth][gridWidth];
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
-                Rectangle rect = createRect(x, y, paintPaneRectWidth, paintPaneRectHeight);
-
-                addMouseActionForRect(rect);
+                Rectangle rect = createRect
+                        (x*paintPaneRectWidth, y*paintPaneRectHeight, paintPaneRectWidth, paintPaneRectHeight);
 
                 rectangles[x][y] = rect;
-                this.add(rect, x, y);
+
+                this.paintRect(rect,(Color) rect.getFill());
             }
         }
         return rectangles;
@@ -130,96 +190,108 @@ public class PaintPane extends GridPane {
     private Rectangle createRect(int x, int y, int rectWidth, int rectHeight) {
         Color defaultRectColor = Color.TRANSPARENT;
 
-        Rectangle rect =
-                new Rectangle(x * rectWidth, y * rectHeight,
-                        rectWidth, rectHeight);
+        Rectangle rect = new Rectangle(x, y, rectWidth, rectHeight);
+
         rect.setFill(defaultRectColor);
-        rect.setStroke(defaultRectColor);
 
         return rect;
     }
 
-    private void addMouseActionForRect(Rectangle rect) {
-        rect.setOnMousePressed(event -> {
+    private void paintRect(Rectangle rect, Color color) {
+        if(isGridLinesVisible) {
+            if(color == Color.TRANSPARENT) {
+                rect.setFill(color);
+                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                graphic.setStroke(paintPaneGridStrokeColor);
+                graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            } else {
+                rect.setFill(color);
+                graphic.setFill(color);
+                graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                graphic.setStroke(paintPaneGridStrokeColor);
+                graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            }
+        } else {
+            if(color == Color.TRANSPARENT) {
+                rect.setFill(color);
+                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            } else {
+                rect.setFill(color);
+                graphic.setFill(color);
+                graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            }
+        }
+
+
+    }
+
+    private void loadMouseActionsPaintPaneActionGroup(PaintPane paintPane) {
+        paintPane.setOnMousePressed(event -> {
+            int rectX = (int) (event.getX()/ paintPaneRectWidth);
+            int rectY = (int) (event.getY() / paintPaneRectHeight);
+
+            Rectangle rect = rectanglesGrid[rectX][rectY];
+
             if(event.getButton() == MouseButton.PRIMARY) {
-                repaintRect(rect, currentRectColor);
+                paintRect(rect, currentRectColor);
                 InstrumentPane.ADD_LAST_USED_COLOR(currentRectColor);
             }
             if(event.getButton() == MouseButton.SECONDARY)
                 this.setCurrentRectColor((Color) rect.getFill());
-        });
-    }
 
-    private void repaintRect(Rectangle rect, Color color) {
-        rect.setFill(color);
-        rect.setStroke(color);
-    }
-
-    private void loadScrollingPaintPaneActionGroup(PaintPane paintPane) {
-        final double SCALE_DELTA = 1.1;
-
-        paintPane.setOnScroll(event -> {
-            event.consume();
-
-            if (event.getDeltaY() == 0) {
-                return;
-            }
-
-            Scale scale = new Scale();
-
-            double scaleFactor =
-                    (event.getDeltaY() > 0)
-                            ? SCALE_DELTA
-                            : 1/SCALE_DELTA;
-
-            scale.setPivotX(event.getX());
-            scale.setPivotY(event.getY());
-            scale.setX(getScaleX() * scaleFactor);
-            scale.setY(getScaleY() * scaleFactor);
-
-            getTransforms().addAll(scale);
-        });
-    }
-
-    private void loadDraggingPaintPaneActionGroup(PaintPane paintPane) {
-        paintPane.setOnMousePressed(event -> {
             if(event.getButton() == MouseButton.MIDDLE) {
                 paneDragX = event.getSceneX();
                 paneDragY = event.getSceneY();
 
-                paneTranslateX = paintPane.getTranslateX();
-                paneTranslateY = paintPane.getTranslateY();
+                paneTranslateX = getTranslateX();
+                paneTranslateY = getTranslateY();
 
-                paintPane.setCursor(Cursor.CLOSED_HAND);
+                setCursor(Cursor.CLOSED_HAND);
             }
         });
 
         paintPane.setOnMouseReleased(event -> {
             if(event.getButton() == MouseButton.MIDDLE)
-                paintPane.setCursor(Cursor.DEFAULT);
+                setCursor(Cursor.CROSSHAIR);
         });
 
-        int correction = 1; // correction accuracy
-        final int rectWidth = paintPaneWidth / gridWidth + correction;
-        final int rectHeight = paintPaneHeight / gridHeight + correction;
+        paintPane.setOnMouseDragged(event -> {
+            int rectX = (int) (event.getX()/ paintPaneRectWidth);
+            int rectY = (int) (event.getY() / paintPaneRectHeight);
+            Rectangle rect = rectanglesGrid[rectX][rectY];
 
-        this.setOnMouseDragged(event -> {
-
-            int rectX = (int) (event.getX()/ rectWidth);
-            int rectY = (int) (event.getY() / rectHeight);
-
-            if(event.getButton() == MouseButton.PRIMARY ) {
-                rectanglesGrid[rectX][rectY].setFill(currentRectColor);
-                rectanglesGrid[rectX][rectY].setStroke(currentRectColor);
-            }
+            if(event.getButton() == MouseButton.PRIMARY)
+                this.paintRect(rect,currentRectColor);
 
             if(event.getButton() == MouseButton.MIDDLE) {
                 double offsetX = event.getSceneX() - paneDragX;
                 double offsetY = event.getSceneY() - paneDragY;
 
-                paintPane.setTranslateX(paneTranslateX + offsetX);
-                paintPane.setTranslateY(paneTranslateY + offsetY);
+                setTranslateX(paneTranslateX + offsetX);
+                setTranslateY(paneTranslateY + offsetY);
             }
+        });
+    }
+
+    private void loadScrollingPaintPaneActionGroup(PaintPane paintPane) {
+        final double scaleDelta = 1.1;
+
+        paintPane.setOnScroll(event -> {
+            event.consume();
+
+            if (event.getDeltaY() == 0)
+                return;
+
+            paintPaneScale = new Scale();
+
+            double scaleFactor = (event.getDeltaY() > 0) ? scaleDelta : 1/scaleDelta;
+
+            paintPaneScale.setPivotX(event.getX());
+            paintPaneScale.setPivotY(event.getY());
+            paintPaneScale.setX(getScaleX() * scaleFactor);
+            paintPaneScale.setY(getScaleY() * scaleFactor);
+
+            getTransforms().addAll(paintPaneScale);
         });
     }
 
