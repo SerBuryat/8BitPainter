@@ -1,7 +1,6 @@
 package com.thunderTECH.Painter8Bit.panels.painter;
 
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;

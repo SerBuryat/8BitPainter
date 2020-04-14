@@ -5,10 +5,7 @@ import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
 import com.thunderTECH.Painter8Bit.panels.painter.SettingsPanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Painter extends Application {

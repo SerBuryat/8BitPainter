@@ -8,6 +8,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
@@ -25,8 +26,8 @@ public class PaintPane extends Canvas {
 
     private final GraphicsContext graphic;
 
-    private final int paintPaneWidth = 1360;
-    private final int paintPaneHeight = 900;
+    private final int paintPaneWidth = 1280;
+    private final int paintPaneHeight = 720;
 
     private final int paintPaneRectWidth = 10;
     private final int paintPaneRectHeight = 10;
@@ -80,11 +81,10 @@ public class PaintPane extends Canvas {
     public void setGridLinesVisible(boolean paintPaneGridVisible) {
         isGridLinesVisible = paintPaneGridVisible;
 
-        if(paintPaneGridVisible) {
+        if(isGridLinesVisible) {
             for(int x = 0; x < gridWidth; x++) {
                 for(int y = 0; y < gridHeight; y++) {
                     Rectangle rect = rectanglesGrid[x][y];
-
                     graphic.setStroke(paintPaneGridStrokeColor);
                     graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
                 }
@@ -93,11 +93,7 @@ public class PaintPane extends Canvas {
             for(int x = 0; x < gridWidth; x++) {
                 for(int y = 0; y < gridHeight; y++) {
                     Rectangle rect = rectanglesGrid[x][y];
-
-                    if(rect.getFill() == Color.TRANSPARENT)
-                        graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-                    else
-                        this.paintRect(rect,(Color)rect.getFill());
+                    this.paintRect(rect,(Color)rect.getFill());
                 }
             }
         }
@@ -145,7 +141,17 @@ public class PaintPane extends Canvas {
 
         if(file != null){
             Image loadedImage = new Image(file.toURI().toString());
-            graphic.drawImage(loadedImage,0,0,this.getWidth(),this.getHeight());
+            //graphic.drawImage(loadedImage,0,0,this.getWidth(),this.getHeight());
+
+            PixelReader pixelReader = loadedImage.getPixelReader();
+
+            for(int x = 0; x < gridWidth; x++) {
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+                    Color color = pixelReader.getColor((int)rect.getX(),(int)rect.getY());
+                    this.paintRect(rect, color);
+                }
+            }
         }
     }
 
@@ -193,6 +199,7 @@ public class PaintPane extends Canvas {
         Rectangle rect = new Rectangle(x, y, rectWidth, rectHeight);
 
         rect.setFill(defaultRectColor);
+        rect.setStroke(defaultRectColor);
 
         return rect;
     }
@@ -201,25 +208,31 @@ public class PaintPane extends Canvas {
         if(isGridLinesVisible) {
             if(color == Color.TRANSPARENT) {
                 rect.setFill(color);
+
                 graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
                 graphic.setStroke(paintPaneGridStrokeColor);
                 graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
             } else {
                 rect.setFill(color);
+
                 graphic.setFill(color);
                 graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
                 graphic.setStroke(paintPaneGridStrokeColor);
                 graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
             }
         } else {
-            if(color == Color.TRANSPARENT) {
+            if(color.equals(Color.TRANSPARENT)) {
                 rect.setFill(color);
-                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+                //-1 -> bcs in clearRect() bounds bigger then in other drawing methods(fillRect(),strokeRect() etc.)
+                //it's a java man)))
+                graphic.clearRect(rect.getX()+1,rect.getY()+1,rect.getWidth()-1,rect.getHeight()-1);
             } else {
                 rect.setFill(color);
+
                 graphic.setFill(color);
                 graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
             }
+
         }
 
 
