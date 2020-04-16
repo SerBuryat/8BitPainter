@@ -1,7 +1,7 @@
 package com.thunderTECH.Painter8Bit.panels.instruments;
 
 import com.thunderTECH.Painter8Bit.ColorsGenerator;
-import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
+import com.thunderTECH.Painter8Bit.panels.PaintPane;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
@@ -18,8 +18,8 @@ public class ColorsPalette extends GridPane {
     public ColorsPalette(PaintPane paintPane) {
         this.paintPane = paintPane;
 
-        int rectWidth = 20;
-        int rectHeight = 20;
+        int rectWidth = 15;
+        int rectHeight = 15;
 
         colors = getColorsList();
 

@@ -1,4 +1,4 @@
-package com.thunderTECH.Painter8Bit.panels.painter;
+package com.thunderTECH.Painter8Bit.panels;
 
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
@@ -52,6 +52,7 @@ public class PaintPane extends Canvas {
 
     public PaintPane() {
         graphic = this.getGraphicsContext2D();
+        graphic.setImageSmoothing(false);
 
         this.setWidth(paintPaneWidth);
         this.setHeight(paintPaneHeight);
@@ -72,7 +73,7 @@ public class PaintPane extends Canvas {
         this.setCursor(Cursor.CROSSHAIR);
     }
 
-    public void setPaintPaneDefaultSize() {
+    public void setPaintPaneDefaultPosition() {
         this.getTransforms().clear();
         this.setTranslateX(0.0);
         this.setTranslateY(0.0);
@@ -90,10 +91,18 @@ public class PaintPane extends Canvas {
                 }
             }
         } else {
-            for(int x = 0; x < gridWidth; x++) {
+            for(int x = 0; x < gridWidth; x++) { // first paint all TRANSPARENT color rectangles
                 for(int y = 0; y < gridHeight; y++) {
                     Rectangle rect = rectanglesGrid[x][y];
-                    this.paintRect(rect,(Color)rect.getFill());
+                    if(rect.getFill().equals(Color.TRANSPARENT))
+                        this.paintRect(rect,(Color)rect.getFill());
+                }
+            }
+            for(int x = 0; x < gridWidth; x++) { // then paint all !TRANSPARENT color rectangles
+                for(int y = 0; y < gridHeight; y++) {
+                    Rectangle rect = rectanglesGrid[x][y];
+                    if(!rect.getFill().equals(Color.TRANSPARENT))
+                        this.paintRect(rect,(Color)rect.getFill());
                 }
             }
         }
@@ -108,6 +117,8 @@ public class PaintPane extends Canvas {
     }
 
     public void saveImageFromPaintPane() {
+        this.setPaintPaneDefaultPosition();
+
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
@@ -141,8 +152,6 @@ public class PaintPane extends Canvas {
 
         if(file != null){
             Image loadedImage = new Image(file.toURI().toString());
-            //graphic.drawImage(loadedImage,0,0,this.getWidth(),this.getHeight());
-
             PixelReader pixelReader = loadedImage.getPixelReader();
 
             for(int x = 0; x < gridWidth; x++) {
@@ -223,16 +232,13 @@ public class PaintPane extends Canvas {
         } else {
             if(color.equals(Color.TRANSPARENT)) {
                 rect.setFill(color);
-                //-1 -> bcs in clearRect() bounds bigger then in other drawing methods(fillRect(),strokeRect() etc.)
-                //it's a java man)))
-                graphic.clearRect(rect.getX()+1,rect.getY()+1,rect.getWidth()-1,rect.getHeight()-1);
+                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
             } else {
                 rect.setFill(color);
 
                 graphic.setFill(color);
                 graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
             }
-
         }
 
 

@@ -1,8 +1,8 @@
 package com.thunderTECH.Painter8Bit;
 
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
-import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
-import com.thunderTECH.Painter8Bit.panels.painter.SettingsPanel;
+import com.thunderTECH.Painter8Bit.panels.PaintPane;
+import com.thunderTECH.Painter8Bit.panels.SettingsPanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -25,12 +25,12 @@ public class Painter extends Application {
     private BorderPane getMainPane() {
         BorderPane mainPane = new BorderPane();
 
+
         PaintPane paintPane = new PaintPane();
         InstrumentPane instrumentPane = new InstrumentPane(paintPane);
         SettingsPanel settingsPanel = new SettingsPanel(paintPane);
 
         mainPane.setCenter(paintPane);
-
         mainPane.setRight(instrumentPane);
         mainPane.setTop(settingsPanel);
 

@@ -1,6 +1,6 @@
 package com.thunderTECH.Painter8Bit.panels.instruments;
 
-import com.thunderTECH.Painter8Bit.panels.painter.PaintPane;
+import com.thunderTECH.Painter8Bit.panels.PaintPane;
 import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -55,7 +55,7 @@ public class InstrumentPane extends BorderPane {
 
         lastColorsRectanglesList = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            lastColorsRectanglesList.add(new Rectangle(20,20));
+            lastColorsRectanglesList.add(new Rectangle(15,15));
             colorsPane.add(lastColorsRectanglesList.get(i), i , 0);
         }
 
@@ -74,7 +74,8 @@ public class InstrumentPane extends BorderPane {
     }
 
     private ColorPicker getColorPicker(PaintPane paintPane) {
-        ColorPicker colorPicker = new ColorPicker();// colorPicker
+        ColorPicker colorPicker = new ColorPicker();
+
         colorPicker.setOnAction(action -> {
             paintPane.setCurrentRectColor(colorPicker.getValue());
         });

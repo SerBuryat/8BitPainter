@@ -1,4 +1,4 @@
-package com.thunderTECH.Painter8Bit.panels.painter;
+package com.thunderTECH.Painter8Bit.panels;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -16,7 +16,7 @@ public class SettingsPanel extends GridPane {
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPaintPaneButton(paintPane),2,0);
         this.add(getGridStrokesShowCheckBox(paintPane), 3, 0);
-        this.add(getDefaultSizeOfPaintPane(paintPane),4,0);
+        this.add(getDefaultPaintPanePosition(paintPane),4,0);
         this.add(getShowHelpButton(), 5, 0);
     }
 
@@ -62,11 +62,11 @@ public class SettingsPanel extends GridPane {
         return gridStrokesShowCheckBox;
     }
 
-    private Button getDefaultSizeOfPaintPane(PaintPane paintPane) {
-        Button defaultSizePaintPaneButton = new Button("paintPane default size ");
+    private Button getDefaultPaintPanePosition(PaintPane paintPane) {
+        Button defaultSizePaintPaneButton = new Button("paintPane default position ");
 
         defaultSizePaintPaneButton.setOnAction(action -> {
-            paintPane.setPaintPaneDefaultSize();
+            paintPane.setPaintPaneDefaultPosition();
         });
 
         return defaultSizePaintPaneButton;
