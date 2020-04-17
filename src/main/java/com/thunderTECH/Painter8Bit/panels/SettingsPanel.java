@@ -4,25 +4,27 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 public class SettingsPanel extends GridPane {
 
 
     public SettingsPanel(PaintPane paintPane) {
-        this.setPadding(new Insets(10,10,10,10));
-
         this.add(getSaveImageButton(paintPane),0,0);
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPaintPaneButton(paintPane),2,0);
         this.add(getGridStrokesShowCheckBox(paintPane), 3, 0);
-        this.add(getDefaultPaintPanePosition(paintPane),4,0);
-        this.add(getShowHelpButton(), 5, 0);
+        this.add(getChangePaintPaneRectSizePane(paintPane),4,0);
+        this.add(getDefaultPaintPanePosition(paintPane),5,0);
+        this.add(getShowHelpButton(), 6, 0);
+
+        this.setPadding(new Insets(10,10,10,10));
     }
 
     private Button getSaveImageButton(PaintPane paintPane) {
         Button saveImageButton = new Button("Save image as...");
-        saveImageButton.setPadding(new Insets(10,10,10,10));
 
         saveImageButton.setOnAction(event -> {
             if(paintPane.isGridLinesVisible()) {
@@ -38,7 +40,6 @@ public class SettingsPanel extends GridPane {
 
     private Button getLoadImageButton(PaintPane paintPane) {
         Button loadImageButton = new Button("Load image from...");
-        loadImageButton.setPadding(new Insets(10,10,10,10));
         loadImageButton.setOnAction(event -> paintPane.loadImageToPaintPane());
 
         return loadImageButton;
@@ -46,7 +47,6 @@ public class SettingsPanel extends GridPane {
 
     private Button getClearPaintPaneButton(PaintPane paintPane) {
         Button clearPaintPaneButton = new Button("Clear panel");
-        clearPaintPaneButton.setPadding(new Insets(10,10,10,10));
         clearPaintPaneButton.setOnAction(event -> paintPane.clearPaintPane());
 
         return clearPaintPaneButton;
@@ -54,7 +54,6 @@ public class SettingsPanel extends GridPane {
 
     private CheckBox getGridStrokesShowCheckBox(PaintPane paintPane) {
         CheckBox gridStrokesShowCheckBox = new CheckBox("Show paint grid");
-        gridStrokesShowCheckBox.setPadding(new Insets(10,10,10,10));
         gridStrokesShowCheckBox.setSelected(paintPane.isGridLinesVisible());
         gridStrokesShowCheckBox.setOnAction(event ->
                 paintPane.setGridLinesVisible(gridStrokesShowCheckBox.isSelected()));
@@ -92,5 +91,35 @@ public class SettingsPanel extends GridPane {
         });
 
         return showHelpButton;
+    }
+
+    private BorderPane getChangePaintPaneRectSizePane(PaintPane paintPane) {
+        BorderPane changePaintPaneRectSize = new BorderPane();
+
+        Label text = new Label("PaintPane rectangles size");
+        Label value = new Label(String.valueOf(paintPane.getPaintPaneRectSize()));
+
+        Button minusSizeValue = new Button("-");
+        minusSizeValue.setOnAction
+                (actionEvent -> {
+                    paintPane.setPaintPaneRectSize(paintPane.getPaintPaneRectSize() - 1);
+                    value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
+                });
+
+        Button plusSizeValue = new Button("+");
+        plusSizeValue.setOnAction
+                (actionEvent -> {
+                    paintPane.setPaintPaneRectSize(paintPane.getPaintPaneRectSize() + 1);
+                    value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
+                });
+
+        changePaintPaneRectSize.setTop(text);
+        changePaintPaneRectSize.setLeft(minusSizeValue);
+        changePaintPaneRectSize.setCenter(value);
+        changePaintPaneRectSize.setRight(plusSizeValue);
+
+        changePaintPaneRectSize.setPadding(new Insets(10,10,10,10));
+
+        return changePaintPaneRectSize;
     }
 }

@@ -22,18 +22,19 @@ import java.io.File;
 import java.io.IOException;
 
 public class PaintPane extends Canvas {
-    private final Rectangle[][] rectanglesGrid;
+    private Rectangle[][] rectanglesGrid;
 
     private final GraphicsContext graphic;
 
-    private final int paintPaneWidth = 1280;
-    private final int paintPaneHeight = 720;
+    private int paintPaneWidth = 800;
+    private int paintPaneHeight = 600;
 
-    private final int paintPaneRectWidth = 10;
-    private final int paintPaneRectHeight = 10;
+    private int paintPaneRectSize = 10;
+    private int paintPaneRectWidth = paintPaneRectSize;
+    private int paintPaneRectHeight = paintPaneRectSize;
 
-    private final int gridWidth;
-    private final int gridHeight;
+    private int gridWidth;
+    private int gridHeight;
 
     private Color currentRectColor;
 
@@ -50,6 +51,8 @@ public class PaintPane extends Canvas {
     //vars for scaling paintPane
     private Scale paintPaneScale;
 
+
+    //constructors
     public PaintPane() {
         graphic = this.getGraphicsContext2D();
         graphic.setImageSmoothing(false);
@@ -67,12 +70,14 @@ public class PaintPane extends Canvas {
         this.loadMouseActionsPaintPaneActionGroup(this);
         this.loadScrollingPaintPaneActionGroup(this);
 
-        isGridLinesVisible = false;
         paintPaneGridStrokeColor = Color.GRAY;
+        this.setGridLinesVisible(true);
 
         this.setCursor(Cursor.CROSSHAIR);
     }
 
+
+    //public
     public void setPaintPaneDefaultPosition() {
         this.getTransforms().clear();
         this.setTranslateX(0.0);
@@ -83,29 +88,11 @@ public class PaintPane extends Canvas {
         isGridLinesVisible = paintPaneGridVisible;
 
         if(isGridLinesVisible) {
-            for(int x = 0; x < gridWidth; x++) {
-                for(int y = 0; y < gridHeight; y++) {
-                    Rectangle rect = rectanglesGrid[x][y];
-                    graphic.setStroke(paintPaneGridStrokeColor);
-                    graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-                }
-            }
+            this.drawPaintPaneGrid();
         } else {
-            for(int x = 0; x < gridWidth; x++) { // first paint all TRANSPARENT color rectangles
-                for(int y = 0; y < gridHeight; y++) {
-                    Rectangle rect = rectanglesGrid[x][y];
-                    if(rect.getFill().equals(Color.TRANSPARENT))
-                        this.paintRect(rect,(Color)rect.getFill());
-                }
-            }
-            for(int x = 0; x < gridWidth; x++) { // then paint all !TRANSPARENT color rectangles
-                for(int y = 0; y < gridHeight; y++) {
-                    Rectangle rect = rectanglesGrid[x][y];
-                    if(!rect.getFill().equals(Color.TRANSPARENT))
-                        this.paintRect(rect,(Color)rect.getFill());
-                }
-            }
+            this.repaintPaintPane();
         }
+
     }
 
     public boolean isGridLinesVisible() {
@@ -153,14 +140,7 @@ public class PaintPane extends Canvas {
         if(file != null){
             Image loadedImage = new Image(file.toURI().toString());
             PixelReader pixelReader = loadedImage.getPixelReader();
-
-            for(int x = 0; x < gridWidth; x++) {
-                for(int y = 0; y < gridHeight; y++) {
-                    Rectangle rect = rectanglesGrid[x][y];
-                    Color color = pixelReader.getColor((int)rect.getX(),(int)rect.getY());
-                    this.paintRect(rect, color);
-                }
-            }
+            drawPixelsFromImageToPaintPane(pixelReader);
         }
     }
 
@@ -185,6 +165,70 @@ public class PaintPane extends Canvas {
                 }
             }
         }
+    }
+
+    public void setPaintPaneRectSize(int value) {
+        if(value>=5 && value<=30)
+            paintPaneRectSize = value;
+
+        this.recalculatePaintPane();
+    }
+
+    public int getPaintPaneRectSize() {
+        return paintPaneRectSize;
+    }
+
+    //private
+    private void drawPaintPaneGrid() {
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                Rectangle rect = rectanglesGrid[x][y];
+                graphic.setStroke(paintPaneGridStrokeColor);
+                graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            }
+        }
+    }
+
+    private void repaintPaintPane() {
+        for(int x = 0; x < gridWidth; x++) { // first paint all TRANSPARENT color rectangles
+            for(int y = 0; y < gridHeight; y++) {
+                Rectangle rect = rectanglesGrid[x][y];
+                if(rect.getFill().equals(Color.TRANSPARENT))
+                    this.paintRect(rect,(Color)rect.getFill());
+            }
+        }
+        for(int x = 0; x < gridWidth; x++) { // then paint all !TRANSPARENT color rectangles
+            for(int y = 0; y < gridHeight; y++) {
+                Rectangle rect = rectanglesGrid[x][y];
+                if(!rect.getFill().equals(Color.TRANSPARENT))
+                    this.paintRect(rect,(Color)rect.getFill());
+            }
+        }
+    }
+
+    private void drawPixelsFromImageToPaintPane(PixelReader pixelReader) {
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                Rectangle rect = rectanglesGrid[x][y];
+                Color color = pixelReader.getColor((int)rect.getX(),(int)rect.getY());
+                this.paintRect(rect, color);
+            }
+        }
+    }
+
+    private void recalculatePaintPane() {
+        //change paintPane size if can't divide size completely
+        if(this.getWidth() % paintPaneRectSize != 0 || this.getHeight() % paintPaneRectSize != 0) {
+            this.setWidth((paintPaneWidth - (paintPaneWidth % paintPaneRectSize)));
+            this.setHeight((paintPaneHeight - (paintPaneHeight % paintPaneRectSize)));
+        }
+
+        this.paintPaneRectWidth = paintPaneRectSize;
+        this.paintPaneRectHeight = paintPaneRectSize;
+        this.gridWidth = paintPaneWidth / paintPaneRectWidth;
+        this.gridHeight = paintPaneHeight / paintPaneRectHeight;
+
+        rectanglesGrid = getRectanglesGridArray(gridWidth, gridHeight);
     }
 
     private Rectangle[][] getRectanglesGridArray(int gridWidth, int gridHeight) {
@@ -214,34 +258,33 @@ public class PaintPane extends Canvas {
     }
 
     private void paintRect(Rectangle rect, Color color) {
+        rect.setFill(color);
+        if(color.equals(Color.TRANSPARENT))
+            this.paintTransparentRect(rect);
+        else
+            this.paintColoredRect(rect, color);
+    }
+
+    private void paintTransparentRect(Rectangle rect) {
         if(isGridLinesVisible) {
-            if(color == Color.TRANSPARENT) {
-                rect.setFill(color);
-
-                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-                graphic.setStroke(paintPaneGridStrokeColor);
-                graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-            } else {
-                rect.setFill(color);
-
-                graphic.setFill(color);
-                graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-                graphic.setStroke(paintPaneGridStrokeColor);
-                graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-            }
+            graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            graphic.setStroke(paintPaneGridStrokeColor);
+            graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
         } else {
-            if(color.equals(Color.TRANSPARENT)) {
-                rect.setFill(color);
-                graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-            } else {
-                rect.setFill(color);
-
-                graphic.setFill(color);
-                graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
-            }
+            graphic.clearRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
         }
+    }
 
-
+    private void paintColoredRect(Rectangle rect, Color color) {
+        if(isGridLinesVisible) {
+            graphic.setFill(color);
+            graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+            graphic.setStroke(paintPaneGridStrokeColor);
+            graphic.strokeRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+        } else {
+            graphic.setFill(color);
+            graphic.fillRect(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight());
+        }
     }
 
     private void loadMouseActionsPaintPaneActionGroup(PaintPane paintPane) {

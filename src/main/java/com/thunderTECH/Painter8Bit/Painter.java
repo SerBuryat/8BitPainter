@@ -1,5 +1,7 @@
 package com.thunderTECH.Painter8Bit;
 
+import com.sun.media.jfxmedia.events.BufferListener;
+import com.sun.media.jfxmedia.events.BufferProgressEvent;
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import com.thunderTECH.Painter8Bit.panels.PaintPane;
 import com.thunderTECH.Painter8Bit.panels.SettingsPanel;
