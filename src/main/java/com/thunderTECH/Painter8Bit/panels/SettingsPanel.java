@@ -64,9 +64,7 @@ public class SettingsPanel extends GridPane {
     private Button getDefaultPaintPanePosition(PaintPane paintPane) {
         Button defaultSizePaintPaneButton = new Button("paintPane default position ");
 
-        defaultSizePaintPaneButton.setOnAction(action -> {
-            paintPane.setPaintPaneDefaultPosition();
-        });
+        defaultSizePaintPaneButton.setOnAction(action -> paintPane.setPaintPaneDefaultPosition());
 
         return defaultSizePaintPaneButton;
     }

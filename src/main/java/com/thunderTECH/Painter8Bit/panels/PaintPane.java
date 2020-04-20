@@ -1,5 +1,6 @@
 package com.thunderTECH.Painter8Bit.panels;
 
+import com.thunderTECH.Painter8Bit.panels.instruments.ColorsPalette;
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
@@ -26,8 +27,10 @@ public class PaintPane extends Canvas {
 
     private final GraphicsContext graphic;
 
-    private int paintPaneWidth = 800;
-    private int paintPaneHeight = 600;
+    private final int defaultPaintPaneWidth = 800;
+    private final int defaultPaintPaneHeight = 600;
+    private int paintPaneWidth = defaultPaintPaneWidth;
+    private int paintPaneHeight = defaultPaintPaneHeight;
 
     private int paintPaneRectSize = 10;
     private int paintPaneRectWidth = paintPaneRectSize;
@@ -101,6 +104,7 @@ public class PaintPane extends Canvas {
 
     public void setCurrentRectColor(Color rectColor) {
         currentRectColor = rectColor;
+        ColorsPalette.showCurrentColorOnPalette(currentRectColor);
     }
 
     public void saveImageFromPaintPane() {
@@ -139,8 +143,12 @@ public class PaintPane extends Canvas {
 
         if(file != null){
             Image loadedImage = new Image(file.toURI().toString());
-            PixelReader pixelReader = loadedImage.getPixelReader();
-            drawPixelsFromImageToPaintPane(pixelReader);
+
+            paintPaneWidth = (int) loadedImage.getWidth();
+            paintPaneHeight = (int) loadedImage.getHeight();
+            recalculatePaintPane();
+
+            drawPixelsFromImageToPaintPane(loadedImage.getPixelReader());
         }
     }
 
@@ -298,8 +306,9 @@ public class PaintPane extends Canvas {
                 paintRect(rect, currentRectColor);
                 InstrumentPane.ADD_LAST_USED_COLOR(currentRectColor);
             }
-            if(event.getButton() == MouseButton.SECONDARY)
+            if(event.getButton() == MouseButton.SECONDARY) {
                 this.setCurrentRectColor((Color) rect.getFill());
+            }
 
             if(event.getButton() == MouseButton.MIDDLE) {
                 paneDragX = event.getSceneX();
@@ -320,6 +329,7 @@ public class PaintPane extends Canvas {
         paintPane.setOnMouseDragged(event -> {
             int rectX = (int) (event.getX()/ paintPaneRectWidth);
             int rectY = (int) (event.getY() / paintPaneRectHeight);
+
             Rectangle rect = rectanglesGrid[rectX][rectY];
 
             if(event.getButton() == MouseButton.PRIMARY)

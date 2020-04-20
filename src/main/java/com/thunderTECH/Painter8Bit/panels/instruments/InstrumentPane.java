@@ -76,9 +76,7 @@ public class InstrumentPane extends BorderPane {
     private ColorPicker getColorPicker(PaintPane paintPane) {
         ColorPicker colorPicker = new ColorPicker();
 
-        colorPicker.setOnAction(action -> {
-            paintPane.setCurrentRectColor(colorPicker.getValue());
-        });
+        colorPicker.setOnAction(action -> paintPane.setCurrentRectColor(colorPicker.getValue()));
 
         return colorPicker;
     }

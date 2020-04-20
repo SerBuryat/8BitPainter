@@ -14,6 +14,7 @@ import java.util.List;
 public class ColorsPalette extends GridPane {
     private final PaintPane paintPane;
     private final List<Color> colors;
+    private static List<Rectangle> rectangles;
 
     public ColorsPalette(PaintPane paintPane) {
         this.paintPane = paintPane;
@@ -22,11 +23,21 @@ public class ColorsPalette extends GridPane {
         int rectHeight = 15;
 
         colors = getColorsList();
+        rectangles = getRectanglesList(colors.size(), rectWidth, rectHeight);
 
-        loadPalletOnPane(getRectanglesList(colors.size(), rectWidth, rectHeight));
+        loadPalletOnPane(rectangles);
 
 
-        this.setPadding(new Insets(20,20,20,20));
+        this.setPadding(new Insets(20, 20, 20, 20));
+    }
+
+    public static void showCurrentColorOnPalette(Color currentColor) {
+        rectangles.forEach(rectangle -> rectangle.setStroke(Color.DARKGRAY));
+
+        for (Rectangle rect : rectangles) {
+            if(rect.getFill().equals(currentColor))
+                rect.setStroke(Color.RED);
+        }
     }
 
     private List<Color> getColorsList() {
@@ -51,27 +62,28 @@ public class ColorsPalette extends GridPane {
 
         colorsList.addAll(ColorsGenerator.GET_WHITE_BLACK_COLOR_PALETTE());
 
+        colorsList.add(Color.TRANSPARENT);// last color in palette is TRANSPARENT
+
         return colorsList;
     }
 
     private List<Rectangle> getRectanglesList(int colorsSize, int rectWidth, int rectHeight) {
-        List<Rectangle> rectanglesList = new ArrayList<>(colorsSize);
+        rectangles = new ArrayList<>();
 
         for (int i = 0; i < colorsSize; i++)
-            rectanglesList.add(createRect(rectWidth, rectHeight, colors.get(i)));
+            rectangles.add(createRect(rectWidth, rectHeight, colors.get(i)));
 
-        return rectanglesList;
+        return rectangles;
     }
 
     private Rectangle createRect(int width, int height, Color fillColor) {
         Rectangle rect = new Rectangle(width, height);
         rect.setFill(fillColor);
 
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(0.5);
+        rect.setStroke(Color.DARKGRAY);
 
         rect.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY) {
                 paintPane.setCurrentRectColor((Color) rect.getFill());
             }
         });
@@ -84,7 +96,7 @@ public class ColorsPalette extends GridPane {
         int colSize = 24;
         int rowSize = 24;
 
-        for(int i = 0; i < rectanglesList.size(); i++) {
+        for (int i = 0; i < rectanglesList.size(); i++) {
             int row = (i < rowSize ? i : i % rowSize);
             int col = i / colSize;
             this.add(rectanglesList.get(i), col, row);
