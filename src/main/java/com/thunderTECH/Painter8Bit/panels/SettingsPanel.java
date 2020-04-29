@@ -100,14 +100,14 @@ public class SettingsPanel extends GridPane {
         Button minusSizeValue = new Button("-");
         minusSizeValue.setOnAction
                 (actionEvent -> {
-                    paintPane.setPaintPaneRectSize(paintPane.getPaintPaneRectSize() - 1);
+                    paintPane.setPaintPaneRectSize((int) (paintPane.getPaintPaneRectSize() - 1));
                     value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
                 });
 
         Button plusSizeValue = new Button("+");
         plusSizeValue.setOnAction
                 (actionEvent -> {
-                    paintPane.setPaintPaneRectSize(paintPane.getPaintPaneRectSize() + 1);
+                    paintPane.setPaintPaneRectSize((int) (paintPane.getPaintPaneRectSize() + 1));
                     value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
                 });
 

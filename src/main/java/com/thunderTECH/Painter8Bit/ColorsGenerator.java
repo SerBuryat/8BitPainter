@@ -24,7 +24,7 @@ public class ColorsGenerator {
         int colorMod = 256;
         int step = 16;
 
-        for(int i = colorMod-step; i > 0; i-=step) // skip white (already added)
+        for(int i = colorMod-step; i >= 0; i-=step) // skip white (already added)
             whiteBlackColorsList.add(Color.rgb(i,i,i));
 
         return whiteBlackColorsList;
