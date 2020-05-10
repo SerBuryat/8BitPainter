@@ -25,7 +25,6 @@ public class Painter extends Application {
     private BorderPane getMainPane() {
         BorderPane mainPane = new BorderPane();
 
-
         PaintPane paintPane = new PaintPane();
         InstrumentPane instrumentPane = new InstrumentPane(paintPane);
         SettingsPanel settingsPanel = new SettingsPanel(paintPane);

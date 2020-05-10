@@ -239,12 +239,33 @@ public class PaintPane extends Canvas {
         this.gridWidth = (int) (paintPaneWidth / paintPaneRectWidth);
         this.gridHeight = (int) (paintPaneHeight / paintPaneRectHeight);
 
+        Rectangle[][] previousRectGrid = rectanglesGrid;
+
         rectanglesGrid = getRectanglesGridArray(gridWidth, gridHeight);
+
+        copyPreviousGridToNewRectGrid(previousRectGrid, rectanglesGrid);
+
+        repaintPaintPane();
+    }
+
+    private void copyPreviousGridToNewRectGrid(Rectangle[][] previousRectGrid, Rectangle[][] rectanglesGrid) {
+        int previousGridWidth = previousRectGrid.length;
+        int previousGridHeight = previousRectGrid[0].length;
+
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                if(x < previousGridWidth && y < previousGridHeight) {
+                    if(!previousRectGrid[x][y].getFill().equals(Color.TRANSPARENT)) {
+                        rectanglesGrid[x][y].setFill(previousRectGrid[x][y].getFill());
+                    }
+                }
+            }
+        }
     }
 
 
     private Rectangle[][] getRectanglesGridArray(int gridWidth, int gridHeight) {
-        Rectangle[][] rectangles = new Rectangle[gridWidth][gridWidth];
+        Rectangle[][] rectangles = new Rectangle[gridWidth][gridHeight];
 
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
