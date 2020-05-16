@@ -5,6 +5,7 @@ import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,7 +33,7 @@ public class PaintPane extends Canvas {
     private int paintPaneWidth = defaultPaintPaneWidth;
     private int paintPaneHeight = defaultPaintPaneHeight;
 
-    private double paintPaneRectSize = 10;
+    private int paintPaneRectSize = 10;
     private double paintPaneRectWidth = paintPaneRectSize;
     private double paintPaneRectHeight = paintPaneRectSize;
 
@@ -126,8 +127,6 @@ public class PaintPane extends Canvas {
 
                 // parameters for remove background
                 SnapshotParameters sp = new SnapshotParameters();
-                //minX-6, minY-67 -> without this Viewport of snapshot will be incorrect(i don't know why)
-                sp.setViewport(new Rectangle2D(6,67,this.getWidth(),this.getHeight()));
                 sp.setFill(Color.TRANSPARENT);
 
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(snapshot(sp, writableImage), null);
@@ -147,6 +146,10 @@ public class PaintPane extends Canvas {
 
             paintPaneWidth = (int) loadedImage.getWidth();
             paintPaneHeight = (int) loadedImage.getHeight();
+
+            this.setWidth(paintPaneWidth);
+            this.setHeight(paintPaneHeight);
+
             recalculatePaintPaneSizes();
 
             drawPixelsFromImageToPaintPane(loadedImage.getPixelReader());
@@ -178,15 +181,23 @@ public class PaintPane extends Canvas {
     }
 
 
-    public void setPaintPaneRectSize(int value) {
-        if(value>=5 && value<=30)
-            paintPaneRectSize = value;
+    public void setPaintPaneSize(int width, int height) {
+        if(width > 800)
+            width = 800;
+        if(width < 100)
+            width = 100;
+
+        if(height > 600)
+            height = 600;
+        if(height < 100)
+            height = 100;
+
+        paintPaneWidth = width;
+        paintPaneHeight = height;
+        this.setWidth(width);
+        this.setHeight(height);
 
         this.recalculatePaintPaneSizes();
-    }
-
-    public double getPaintPaneRectSize() {
-        return paintPaneRectSize;
     }
 
     //private

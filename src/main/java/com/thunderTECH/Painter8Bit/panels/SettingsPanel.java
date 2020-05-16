@@ -1,10 +1,7 @@
 package com.thunderTECH.Painter8Bit.panels;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
@@ -16,7 +13,7 @@ public class SettingsPanel extends GridPane {
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPaintPaneButton(paintPane),2,0);
         this.add(getGridStrokesShowCheckBox(paintPane), 3, 0);
-        this.add(getChangePaintPaneRectSizePane(paintPane),4,0);
+        this.add(getChangePaintPaneSizePane(paintPane),4,0);
         this.add(getDefaultPaintPanePosition(paintPane),5,0);
         this.add(getShowHelpButton(), 6, 0);
 
@@ -91,33 +88,28 @@ public class SettingsPanel extends GridPane {
         return showHelpButton;
     }
 
-    private BorderPane getChangePaintPaneRectSizePane(PaintPane paintPane) {
-        BorderPane changePaintPaneRectSize = new BorderPane();
+    private GridPane getChangePaintPaneSizePane(PaintPane paintPane) {
+        GridPane changePaintPaneSizePane = new GridPane();
 
-        Label text = new Label("PaintPane rectangles size");
-        Label value = new Label(String.valueOf(paintPane.getPaintPaneRectSize()));
+        Label widthText = new Label("Width:");
+        Label heightText = new Label("Height:");
 
-        Button minusSizeValue = new Button("-");
-        minusSizeValue.setOnAction
-                (actionEvent -> {
-                    paintPane.setPaintPaneRectSize((int) (paintPane.getPaintPaneRectSize() - 1));
-                    value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
-                });
+        TextField widthField = new TextField(String.valueOf(paintPane.getWidth()));
+        TextField heightField = new TextField(String.valueOf(paintPane.getHeight()));
 
-        Button plusSizeValue = new Button("+");
-        plusSizeValue.setOnAction
-                (actionEvent -> {
-                    paintPane.setPaintPaneRectSize((int) (paintPane.getPaintPaneRectSize() + 1));
-                    value.setText(String.valueOf(paintPane.getPaintPaneRectSize()));
-                });
+        Button changeSizeButton = new Button("Change size");
+        changeSizeButton.setOnAction(actionEvent ->
+                paintPane.setPaintPaneSize
+                        (Integer.parseInt(widthField.getText()),Integer.parseInt(heightField.getText())));
 
-        changePaintPaneRectSize.setTop(text);
-        changePaintPaneRectSize.setLeft(minusSizeValue);
-        changePaintPaneRectSize.setCenter(value);
-        changePaintPaneRectSize.setRight(plusSizeValue);
+        changePaintPaneSizePane.add(widthText,0,0);
+        changePaintPaneSizePane.add(heightText,0,1);
+        changePaintPaneSizePane.add(widthField,1,0);
+        changePaintPaneSizePane.add(heightField,1,1);
+        changePaintPaneSizePane.add(changeSizeButton,2,0);
 
-        changePaintPaneRectSize.setPadding(new Insets(10,10,10,10));
+        changePaintPaneSizePane.setPadding(new Insets(10,10,10,10));
 
-        return changePaintPaneRectSize;
+        return changePaintPaneSizePane;
     }
 }
