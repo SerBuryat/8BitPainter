@@ -12,7 +12,7 @@ public class Painter extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setScene(new Scene(getMainPane()));
+        stage.setScene(new Scene(getMainPane(),1280,720));
         stage.setTitle("[8BitPainter]");
         stage.setResizable(false);
         stage.show();

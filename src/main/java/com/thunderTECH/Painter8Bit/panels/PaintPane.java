@@ -33,9 +33,9 @@ public class PaintPane extends Canvas {
     private int paintPaneWidth = defaultPaintPaneWidth;
     private int paintPaneHeight = defaultPaintPaneHeight;
 
-    private int paintPaneRectSize = 10;
-    private double paintPaneRectWidth = paintPaneRectSize;
-    private double paintPaneRectHeight = paintPaneRectSize;
+    private final int paintPaneRectSize = 10;
+    private int paintPaneRectWidth = paintPaneRectSize;
+    private int paintPaneRectHeight = paintPaneRectSize;
 
     private int gridWidth;
     private int gridHeight;
@@ -59,7 +59,6 @@ public class PaintPane extends Canvas {
     //constructors
     public PaintPane() {
         graphic = this.getGraphicsContext2D();
-        graphic.setImageSmoothing(false);
 
         this.setWidth(paintPaneWidth);
         this.setHeight(paintPaneHeight);
@@ -229,10 +228,12 @@ public class PaintPane extends Canvas {
 
 
     private void drawPixelsFromImageToPaintPane(PixelReader pixelReader) {
+        // corr is for avoiding native FX anti-aliasing
+        int corr = paintPaneRectSize / 2;
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
                 Rectangle rect = rectanglesGrid[x][y];
-                Color color = pixelReader.getColor((int)rect.getX(),(int)rect.getY());
+                Color color = pixelReader.getColor((int)rect.getX()+corr,(int)rect.getY()+corr);
                 this.paintRect(rect, color);
             }
         }
