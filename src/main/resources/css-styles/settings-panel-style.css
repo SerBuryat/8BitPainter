@@ -1,0 +1,16 @@
+.settings-pane {
+    -fx-padding: 5px;
+    -fx-hgap: 5px;
+}
+
+.button {
+    -fx-background-color: rgb(100,200,50);
+}
+
+.button:hover {
+    -fx-background-color: rgb(90,180,50);
+}
+
+.button:pressed {
+    -fx-background-color: rgb(200,180,50);
+}

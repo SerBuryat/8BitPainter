@@ -2,13 +2,15 @@ package com.thunderTECH.Painter8Bit.panels;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 public class SettingsPanel extends GridPane {
 
 
     public SettingsPanel(PaintPane paintPane) {
+        this.getStyleClass().add("settings-pane");
+        this.getStylesheets().add("css-styles/settings-panel-style.css");
+
         this.add(getSaveImageButton(paintPane),0,0);
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPaintPaneButton(paintPane),2,0);
@@ -16,8 +18,6 @@ public class SettingsPanel extends GridPane {
         this.add(getChangePaintPaneSizePane(paintPane),4,0);
         this.add(getDefaultPaintPanePosition(paintPane),5,0);
         this.add(getShowHelpButton(), 6, 0);
-
-        this.setPadding(new Insets(10,10,10,10));
     }
 
     private Button getSaveImageButton(PaintPane paintPane) {
@@ -94,8 +94,8 @@ public class SettingsPanel extends GridPane {
         Label widthText = new Label("Width:");
         Label heightText = new Label("Height:");
 
-        TextField widthField = new TextField(String.valueOf(paintPane.getWidth()));
-        TextField heightField = new TextField(String.valueOf(paintPane.getHeight()));
+        TextField widthField = new TextField(String.valueOf((int)paintPane.getWidth()));
+        TextField heightField = new TextField(String.valueOf((int)paintPane.getHeight()));
 
         Button changeSizeButton = new Button("Change size");
         changeSizeButton.setOnAction(actionEvent ->
