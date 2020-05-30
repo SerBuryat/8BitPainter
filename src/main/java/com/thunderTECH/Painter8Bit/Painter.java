@@ -3,8 +3,10 @@ package com.thunderTECH.Painter8Bit;
 import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
 import com.thunderTECH.Painter8Bit.panels.PaintPane;
 import com.thunderTECH.Painter8Bit.panels.SettingsPanel;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
