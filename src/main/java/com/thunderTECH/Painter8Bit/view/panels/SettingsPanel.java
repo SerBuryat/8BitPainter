@@ -1,4 +1,4 @@
-package com.thunderTECH.Painter8Bit.panels;
+package com.thunderTECH.Painter8Bit.view.panels;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;

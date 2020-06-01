@@ -1,8 +1,8 @@
-package com.thunderTECH.Painter8Bit.panels;
+package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.ActionBuffer;
-import com.thunderTECH.Painter8Bit.panels.instruments.ColorsPalette;
-import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
+import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
+import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
@@ -12,8 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

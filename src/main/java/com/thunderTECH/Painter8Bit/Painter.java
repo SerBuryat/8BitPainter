@@ -1,20 +1,17 @@
 package com.thunderTECH.Painter8Bit;
 
-import com.thunderTECH.Painter8Bit.panels.instruments.InstrumentPane;
-import com.thunderTECH.Painter8Bit.panels.PaintPane;
-import com.thunderTECH.Painter8Bit.panels.SettingsPanel;
-
+import com.thunderTECH.Painter8Bit.view.Viewer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Painter extends Application {
-
+    private static int PIXEL_SIZE = 10; // 10x10 rectangle
+    private static int CANVAS_WIDTH = 800;
+    private static int CANVAS_HEIGHT = 600;
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(getMainPane(),1280,720);
+        Scene scene = new Scene(Viewer.GET_VIEW_PANE(),1280,720);
         stage.setScene(scene);
         stage.setTitle("[8BitPainter]");
         stage.setResizable(false);
@@ -25,8 +22,19 @@ public class Painter extends Application {
         launch(args);
     }
 
-    private BorderPane getMainPane() {
-        BorderPane mainPane = new BorderPane();
+    public static int GET_PIXEL_SIZE() {
+        return PIXEL_SIZE;
+    }
+
+    public static int GET_CANVAS_WIDTH() {
+        return CANVAS_WIDTH;
+    }
+
+    public static int GET_CANVAS_HEIGHT() {
+        return CANVAS_HEIGHT;
+    }
+
+    /*private BorderPane getMainPane() {
 
         PaintPane paintPane = new PaintPane();
         InstrumentPane instrumentPane = new InstrumentPane(paintPane);
@@ -37,5 +45,5 @@ public class Painter extends Application {
         mainPane.setTop(settingsPanel);
 
         return mainPane;
-    }
+    }*/
 }

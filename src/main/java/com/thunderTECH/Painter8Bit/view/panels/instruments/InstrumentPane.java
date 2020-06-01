@@ -1,6 +1,6 @@
-package com.thunderTECH.Painter8Bit.panels.instruments;
+package com.thunderTECH.Painter8Bit.view.panels.instruments;
 
-import com.thunderTECH.Painter8Bit.panels.PaintPane;
+import com.thunderTECH.Painter8Bit.view.panels.PaintPane;
 import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
