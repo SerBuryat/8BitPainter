@@ -1,72 +1,73 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 public class SettingsPanel extends GridPane {
 
 
-    public SettingsPanel(PaintPane paintPane) {
+    public SettingsPanel(PainterCanvas paintPane) {
         this.getStyleClass().add("settings-pane");
         this.getStylesheets().add("css-styles/settings-panel-style.css");
 
-        this.add(getSaveImageButton(paintPane),0,0);
-        this.add(getLoadImageButton(paintPane),1,0);
-        this.add(getClearPaintPaneButton(paintPane),2,0);
-        this.add(getGridStrokesShowCheckBox(paintPane), 3, 0);
-        this.add(getChangePaintPaneSizePane(paintPane),4,0);
-        this.add(getDefaultPaintPanePosition(paintPane),5,0);
-        this.add(getShowHelpButton(), 6, 0);
+        //this.add(getSaveImageButton(paintPane),0,0);
+        //this.add(getLoadImageButton(paintPane),1,0);
+        this.add(getClearPainterCanvasButton(paintPane),2,0);
+        this.add(getCanvasGridLineVisibleCheckBox(paintPane), 3, 0);
+        //this.add(getChangePaintPaneSizePane(paintPane),4,0);
+        //this.add(getDefaultPaintPanePosition(paintPane),5,0);
+        //this.add(getShowHelpButton(), 6, 0);
     }
 
-    private Button getSaveImageButton(PaintPane paintPane) {
+    /*private Button getSaveImageButton(PainterCanvas painterCanvas) {
         Button saveImageButton = new Button("Save image as...");
 
         saveImageButton.setOnAction(event -> {
-            if(paintPane.isGridLinesVisible()) {
-                paintPane.setGridLinesVisible(false);
-                paintPane.saveImageFromPaintPane();
-                paintPane.setGridLinesVisible(true);
+            if(painterCanvas.getPixelGrid().isGridLineVisible()) {
+                painterCanvas.getPixelGrid().setGridLineVisible(false);
+                painterCanvas.saveImageFromPaintPane();
+                painterCanvas.getPixelGrid().setGridLineVisible(true);
             } else
-                paintPane.saveImageFromPaintPane();
+                painterCanvas.saveImageFromPaintPane();
         });
 
         return saveImageButton;
-    }
+    }*/
 
-    private Button getLoadImageButton(PaintPane paintPane) {
+    /*private Button getLoadImageButton(PainterCanvas painterCanvas) {
         Button loadImageButton = new Button("Load image from...");
-        loadImageButton.setOnAction(event -> paintPane.loadImageToPaintPane());
+        loadImageButton.setOnAction(event -> painterCanvas.loadImageToPaintPane());
 
         return loadImageButton;
-    }
+    }*/
 
-    private Button getClearPaintPaneButton(PaintPane paintPane) {
+    private Button getClearPainterCanvasButton(PainterCanvas painterCanvas) {
         Button clearPaintPaneButton = new Button("Clear panel");
-        clearPaintPaneButton.setOnAction(event -> paintPane.clearPaintPane());
+        clearPaintPaneButton.setOnAction(event -> painterCanvas.clear());
 
         return clearPaintPaneButton;
     }
 
-    private CheckBox getGridStrokesShowCheckBox(PaintPane paintPane) {
+    private CheckBox getCanvasGridLineVisibleCheckBox(PainterCanvas painterCanvas) {
         CheckBox gridStrokesShowCheckBox = new CheckBox("Show paint grid");
-        gridStrokesShowCheckBox.setSelected(paintPane.isGridLinesVisible());
-        gridStrokesShowCheckBox.setOnAction(event ->
-                paintPane.setGridLinesVisible(gridStrokesShowCheckBox.isSelected()));
+        gridStrokesShowCheckBox.setSelected(painterCanvas.getPixelGrid().isGridLineVisible());
+        gridStrokesShowCheckBox.setOnAction(event -> {
+                painterCanvas.getPixelGrid().setGridLineVisible(gridStrokesShowCheckBox.isSelected());
+                painterCanvas.repaint();
+        });
 
         return gridStrokesShowCheckBox;
     }
 
-    private Button getDefaultPaintPanePosition(PaintPane paintPane) {
+    /*private Button getDefaultPaintPanePosition(PainterCanvas paintPane) {
         Button defaultSizePaintPaneButton = new Button("paintPane default position ");
 
         defaultSizePaintPaneButton.setOnAction(action -> paintPane.setPaintPaneDefaultPosition());
 
         return defaultSizePaintPaneButton;
-    }
+    }*/
 
-    private Button getShowHelpButton() {
+    /*private Button getShowHelpButton() {
         Button showHelpButton = new Button("Help");
 
         showHelpButton.setOnAction(event -> {
@@ -86,9 +87,9 @@ public class SettingsPanel extends GridPane {
         });
 
         return showHelpButton;
-    }
+    }*/
 
-    private GridPane getChangePaintPaneSizePane(PaintPane paintPane) {
+    /*private GridPane getChangePaintPaneSizePane(PainterCanvas paintPane) {
         GridPane changePaintPaneSizePane = new GridPane();
 
         Label widthText = new Label("Width:");
@@ -111,5 +112,5 @@ public class SettingsPanel extends GridPane {
         changePaintPaneSizePane.setPadding(new Insets(10,10,10,10));
 
         return changePaintPaneSizePane;
-    }
+    }*/
 }

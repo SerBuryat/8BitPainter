@@ -1,6 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels.instruments;
 
-import com.thunderTECH.Painter8Bit.view.panels.PaintPane;
+import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -18,13 +18,13 @@ public class InstrumentPane extends BorderPane {
 
     private static List<Rectangle> lastColorsRectanglesList;
 
-    public InstrumentPane(PaintPane paintPane) {
+    public InstrumentPane(PainterCanvas painterCanvas) {
 
-        this.setTop(getColorPicker(paintPane));
+        this.setTop(getColorPicker(painterCanvas));
 
-        this.setCenter(new ColorsPalette(paintPane));
+        this.setCenter(new ColorsPalette(painterCanvas));
 
-        this.setBottom(getLastUsedColorsPane(paintPane));
+        this.setBottom(getLastUsedColorsPane(painterCanvas));
 
         this.setPadding(new Insets(20,20,20,20));
     }
@@ -45,7 +45,7 @@ public class InstrumentPane extends BorderPane {
                 .anyMatch(rectangle -> rectangle.getFill() == color);
     }
 
-    private BorderPane getLastUsedColorsPane(PaintPane paintPane) {
+    private BorderPane getLastUsedColorsPane(PainterCanvas painterCanvas) {
         BorderPane lastUsedColorsPane = new BorderPane(); // lastUsedColorsPane
 
         lastUsedColorsPane.setTop(new Label("Last used colors: "));
@@ -65,7 +65,7 @@ public class InstrumentPane extends BorderPane {
             rect.setStrokeWidth(0.5);
             rect.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY) {
-                    paintPane.setCurrentRectColor((Color) rect.getFill());
+                    painterCanvas.setCurrentPixelColor((Color) rect.getFill());
                 }
             });
         });
@@ -73,10 +73,10 @@ public class InstrumentPane extends BorderPane {
         return lastUsedColorsPane;
     }
 
-    private ColorPicker getColorPicker(PaintPane paintPane) {
+    private ColorPicker getColorPicker(PainterCanvas painterCanvas) {
         ColorPicker colorPicker = new ColorPicker();
 
-        colorPicker.setOnAction(action -> paintPane.setCurrentRectColor(colorPicker.getValue()));
+        colorPicker.setOnAction(action -> painterCanvas.setCurrentPixelColor(colorPicker.getValue()));
 
         return colorPicker;
     }

@@ -33,17 +33,4 @@ public class Painter extends Application {
     public static int GET_CANVAS_HEIGHT() {
         return CANVAS_HEIGHT;
     }
-
-    /*private BorderPane getMainPane() {
-
-        PaintPane paintPane = new PaintPane();
-        InstrumentPane instrumentPane = new InstrumentPane(paintPane);
-        SettingsPanel settingsPanel = new SettingsPanel(paintPane);
-
-        mainPane.setCenter(paintPane);
-        mainPane.setRight(instrumentPane);
-        mainPane.setTop(settingsPanel);
-
-        return mainPane;
-    }*/
 }

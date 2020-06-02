@@ -1,7 +1,7 @@
 package com.thunderTECH.Painter8Bit.view.panels.instruments;
 
 import com.thunderTECH.Painter8Bit.ColorsGenerator;
-import com.thunderTECH.Painter8Bit.view.panels.PaintPane;
+import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorsPalette extends GridPane {
-    private final PaintPane paintPane;
+    private PainterCanvas painterCanvas;
     private final List<Color> colors;
     private static List<Rectangle> rectangles;
 
-    public ColorsPalette(PaintPane paintPane) {
-        this.paintPane = paintPane;
+    public ColorsPalette(PainterCanvas painterCanvas) {
+        this.painterCanvas = painterCanvas;
 
         int rectWidth = 15;
         int rectHeight = 15;
@@ -31,11 +31,11 @@ public class ColorsPalette extends GridPane {
         this.setPadding(new Insets(20, 20, 20, 20));
     }
 
-    public static void showCurrentColorOnPalette(Color currentColor) {
+    public static void showCurrentColorOnPalette(Color currentPixelColor) {
         rectangles.forEach(rectangle -> rectangle.setStroke(Color.DARKGRAY));
 
         for (Rectangle rect : rectangles) {
-            if(rect.getFill().equals(currentColor))
+            if(rect.getFill().equals(currentPixelColor))
                 rect.setStroke(Color.RED);
         }
     }
@@ -84,7 +84,7 @@ public class ColorsPalette extends GridPane {
 
         rect.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                paintPane.setCurrentRectColor((Color) rect.getFill());
+                painterCanvas.setCurrentPixelColor((Color) rect.getFill());
             }
         });
 

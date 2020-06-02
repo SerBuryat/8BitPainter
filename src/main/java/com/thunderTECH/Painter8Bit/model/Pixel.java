@@ -1,25 +1,19 @@
 package com.thunderTECH.Painter8Bit.model;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Pixel {
     private final int x;
     private final int y;
-    private int width;
-    private int height;
-    private Color color = Color.WHITE;
+    private final int width;
+    private final int height;
+    private Color color = Color.TRANSPARENT;
 
     public Pixel(int x, int y, int size) {
         this.x = x;
         this.y = y;
         this.width = size;
         this.height = size;
-    }
-
-    public void paint(GraphicsContext graphic) {
-        graphic.setFill(color);
-        graphic.fillRect( x * width,y * height, width, height);
     }
 
     /** Return true if pixel contains x and y coordinates in it**/

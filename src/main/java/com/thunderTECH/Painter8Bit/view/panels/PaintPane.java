@@ -103,7 +103,7 @@ public class PaintPane extends Canvas {
 
     public void setCurrentRectColor(Color rectColor) {
         currentRectColor = rectColor;
-        ColorsPalette.showCurrentColorOnPalette(currentRectColor);
+        //ColorsPalette.showCurrentColorOnPalette(currentRectColor);
     }
 
     public void setGridLinesVisible(boolean paintPaneGridVisible) {

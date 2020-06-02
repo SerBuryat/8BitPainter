@@ -15,15 +15,11 @@ public class CanvasMouseDragged implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            for (Pixel[] pixels : painterCanvas.getPixelGrid().getGrid()) {
-                for (Pixel pixel : pixels) {
-                    if (pixel.contains(mouseEvent.getX(), mouseEvent.getY())) {
-                        pixel.setColor(painterCanvas.getCurrentColor());
-                        painterCanvas.repaint();
-                    }
-                }
-            }
+        Pixel pixel = painterCanvas.getPixelGrid().getPixelByCoordinates(mouseEvent.getX(), mouseEvent.getY());
+
+        if(pixel != null) {
+            if (mouseEvent.getButton() == MouseButton.PRIMARY)
+                painterCanvas.paintPixel(pixel, painterCanvas.getCurrentPixelColor());
         }
     }
 }
