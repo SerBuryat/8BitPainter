@@ -53,7 +53,7 @@ public class SettingsPanel extends GridPane {
         gridStrokesShowCheckBox.setSelected(painterCanvas.getPixelGrid().isGridLineVisible());
         gridStrokesShowCheckBox.setOnAction(event -> {
                 painterCanvas.getPixelGrid().setGridLineVisible(gridStrokesShowCheckBox.isSelected());
-                painterCanvas.repaint();
+                painterCanvas.paint();
         });
 
         return gridStrokesShowCheckBox;

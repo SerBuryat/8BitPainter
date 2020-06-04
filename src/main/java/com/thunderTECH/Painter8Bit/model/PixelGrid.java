@@ -25,7 +25,7 @@ public class PixelGrid {
         return height;
     }
 
-    public Pixel[][] getPixelsGrid() {
+    public Pixel[][] getGrid() {
         return pixelsGrid;
     }
 
@@ -39,6 +39,10 @@ public class PixelGrid {
 
     public Color getGridLinesColor() {
         return gridLinesColor;
+    }
+
+    public boolean isCorrectGridBorders(int i, int j) {
+        return (i >= 0 && i <= (width - 1)) && (j >= 0 && j <= (height - 1));
     }
 
     /** return pixel which contains this x and y coordinates **/

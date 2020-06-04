@@ -28,11 +28,11 @@ public class Pixel {
     public void setColor(Color color) {
         this.color = color;
     }
-
+    /** Position X in pixelGrid **/
     public int getX() {
         return x;
     }
-
+    /** Position Y in pixelGrid **/
     public int getY() {
         return y;
     }
@@ -47,5 +47,13 @@ public class Pixel {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public String toString() {
+        return "Pixel{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

@@ -21,7 +21,7 @@ public class CanvasMousePressed implements EventHandler<MouseEvent> {
 
         if(pixel != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY)
-                painterCanvas.paintPixel(pixel, painterCanvas.getCurrentPixelColor());
+                painterCanvas.paint(pixel, painterCanvas.getCurrentPixelColor());
 
             if (mouseEvent.getButton() == MouseButton.SECONDARY)
                 painterCanvas.setCurrentPixelColor(pixel.getColor());

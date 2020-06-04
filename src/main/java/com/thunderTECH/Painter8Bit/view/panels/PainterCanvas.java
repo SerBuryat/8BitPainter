@@ -1,6 +1,5 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
-
 import com.thunderTECH.Painter8Bit.Painter;
 import com.thunderTECH.Painter8Bit.control.CanvasMouseDragged;
 import com.thunderTECH.Painter8Bit.control.CanvasMousePressed;
@@ -8,10 +7,12 @@ import com.thunderTECH.Painter8Bit.control.CanvasMouseScroll;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.PixelGrid;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 
 public class PainterCanvas {
     private final Canvas canvas;
@@ -29,14 +30,15 @@ public class PainterCanvas {
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
         canvas.setOnScroll(new CanvasMouseScroll(this));
 
-        repaint();
+        paint();
     }
 
-    public void paintPixel(Pixel pixel, Color color) {
+    /** Paint single pixel in given color **/
+    public void paint(Pixel pixel, Color color) {
         pixel.setColor(color);
 
         if(color.equals(Color.TRANSPARENT))
-            clearPixel(pixel);
+            clear(pixel);
         else {
             graphic.setFill(pixel.getColor());
             graphic.fillRect(
@@ -58,21 +60,36 @@ public class PainterCanvas {
         }
 
     }
-
-    public void repaint() {
-        paintAllPixels();
-        if(pixelGrid.isGridLineVisible()) {
-            paintGrid();
+    /** Paint or repaint given pixels **/
+    public void paint(Pixel[] pixels) {
+        for (Pixel pixel : pixels)
+            paint(pixel, pixel.getColor());
+    }
+    /** Paint or repaint all canvas **/
+    public void paint() {
+        for(Pixel[] pixels : getPixelGrid().getGrid()) {
+            paint(pixels);
         }
-
+        if(pixelGrid.isGridLineVisible())
+            paintGridLines();
     }
 
+    /** Clear all canvas **/
     public void clear() {
         graphic.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+        paint();
     }
-
-    public Canvas getCanvas() {
-        return canvas;
+    /** Clear single pixel **/
+    public void clear(Pixel pixel) {
+        graphic.setFill(pixel.getColor());
+        graphic.clearRect(
+                pixel.getX() * pixel.getWidth(),
+                pixel.getY() * pixel.getHeight(),
+                pixel.getWidth(),
+                pixel.getHeight()
+        );
+        // this code string fixing native java code problem with clearRect() which clears near colored pixels borders
+        paint(getPixelNeighbours(pixel).toArray(Pixel[]::new));
     }
 
     public void setCurrentPixelColor(Color currentPixelColor) {
@@ -82,6 +99,10 @@ public class PainterCanvas {
 
     public Color getCurrentPixelColor() {
         return currentPixelColor;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     public PixelGrid getPixelGrid() {
@@ -96,18 +117,10 @@ public class PainterCanvas {
         return pixelGrid = new PixelGrid(gridWidth, gridHeight, pixelSize);
     }
 
-    private void paintAllPixels() {
+    private void paintGridLines() {
         for(int x = 0; x < pixelGrid.getWidth(); x++) {
             for (int y = 0; y < pixelGrid.getHeight(); y++) {
-                paintPixel(pixelGrid.getPixelsGrid()[x][y], pixelGrid.getPixelsGrid()[x][y].getColor());
-            }
-        }
-    }
-
-    private void paintGrid() {
-        for(int x = 0; x < pixelGrid.getWidth(); x++) {
-            for (int y = 0; y < pixelGrid.getHeight(); y++) {
-                Pixel pixel = pixelGrid.getPixelsGrid()[x][y];
+                Pixel pixel = pixelGrid.getGrid()[x][y];
                 graphic.setStroke(pixelGrid.getGridLinesColor());
                 graphic.setLineWidth(0.5);
                 graphic.strokeRect(
@@ -116,15 +129,22 @@ public class PainterCanvas {
         }
     }
 
-    /** using if pixel color is transparent **/
-    private void clearPixel(Pixel pixel) {
-        graphic.setFill(pixel.getColor());
-        graphic.clearRect(
-                pixel.getX() * pixel.getWidth()+1,
-                pixel.getY() * pixel.getHeight()+1,
-                pixel.getWidth()-1,
-                pixel.getHeight()-1
-        );
+    private ArrayList<Pixel> getPixelNeighbours(Pixel pixel) {
+        ArrayList<Pixel> pixels = new ArrayList<>();
+        int x = pixel.getX();
+        int y = pixel.getY();
+
+        // from TOP-LEFT pixel to BOTTOM-RIGHT pixel
+        for (int i = x-1;i < x+2;i++) {
+            for (int j = y-1;j < y+2;j++) {
+                if (getPixelGrid().isCorrectGridBorders(i,j)) {
+                    if(!pixelGrid.getGrid()[i][j].getColor().equals(Color.TRANSPARENT)) // don't add Transparent pixel
+                        pixels.add(pixelGrid.getGrid()[i][j]);
+                }
+            }
+        }
+
+        return pixels;
     }
 
 }

@@ -19,7 +19,7 @@ public class CanvasMouseDragged implements EventHandler<MouseEvent> {
 
         if(pixel != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY)
-                painterCanvas.paintPixel(pixel, painterCanvas.getCurrentPixelColor());
+                painterCanvas.paint(pixel, painterCanvas.getCurrentPixelColor());
         }
     }
 }
