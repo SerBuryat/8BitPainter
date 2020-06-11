@@ -20,9 +20,9 @@ public class Pixel {
     public boolean contains(double x, double y) {
         double minX = this.x * this.width;
         double minY = this.y * this.height;
-        double maxX = this.x * this.width + this.width;
-        double maxY = this.y * this.height + this.height;
-        return ((x > minX && x < maxX) && (y > minY && y < maxY));
+        double maxX = this.x * this.width + this.width-1;
+        double maxY = this.y * this.height + this.height-1;
+        return ((x >= minX && x <= maxX) && (y >= minY && y <= maxY));
     }
 
     public void setColor(Color color) {

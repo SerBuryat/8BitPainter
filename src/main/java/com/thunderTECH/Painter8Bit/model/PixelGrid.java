@@ -45,8 +45,8 @@ public class PixelGrid {
         return (i >= 0 && i <= (width - 1)) && (j >= 0 && j <= (height - 1));
     }
 
-    /** return pixel which contains this x and y coordinates **/
-    public Pixel getPixelByCoordinates(double x, double y) {
+    /** return pixel which contains this x and y coordinates ON SCREEN NOT IN GRID  **/
+    public Pixel getPixel(double x, double y) {
         for(Pixel[] pixels : pixelsGrid) {
             for (Pixel pixel : pixels) {
                 if(pixel.contains(x, y))

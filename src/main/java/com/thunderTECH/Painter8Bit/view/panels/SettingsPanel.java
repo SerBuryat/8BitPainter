@@ -1,5 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
+import com.thunderTECH.Painter8Bit.Painter;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
@@ -10,7 +11,7 @@ public class SettingsPanel extends GridPane {
         this.getStyleClass().add("settings-pane");
         this.getStylesheets().add("css-styles/settings-panel-style.css");
 
-        //this.add(getSaveImageButton(paintPane),0,0);
+        this.add(getSaveImageButton(paintPane),0,0);
         //this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPainterCanvasButton(paintPane),2,0);
         this.add(getCanvasGridLineVisibleCheckBox(paintPane), 3, 0);
@@ -19,20 +20,13 @@ public class SettingsPanel extends GridPane {
         //this.add(getShowHelpButton(), 6, 0);
     }
 
-    /*private Button getSaveImageButton(PainterCanvas painterCanvas) {
+    private Button getSaveImageButton(PainterCanvas painterCanvas) {
         Button saveImageButton = new Button("Save image as...");
 
-        saveImageButton.setOnAction(event -> {
-            if(painterCanvas.getPixelGrid().isGridLineVisible()) {
-                painterCanvas.getPixelGrid().setGridLineVisible(false);
-                painterCanvas.saveImageFromPaintPane();
-                painterCanvas.getPixelGrid().setGridLineVisible(true);
-            } else
-                painterCanvas.saveImageFromPaintPane();
-        });
+        saveImageButton.setOnAction(event -> Painter.SAVE_PAINTER_CANVAS_IMAGE(painterCanvas));
 
         return saveImageButton;
-    }*/
+    }
 
     /*private Button getLoadImageButton(PainterCanvas painterCanvas) {
         Button loadImageButton = new Button("Load image from...");
