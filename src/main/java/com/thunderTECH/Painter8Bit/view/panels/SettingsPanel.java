@@ -44,9 +44,9 @@ public class SettingsPanel extends GridPane {
 
     private CheckBox getCanvasGridLineVisibleCheckBox(PainterCanvas painterCanvas) {
         CheckBox gridStrokesShowCheckBox = new CheckBox("Show paint grid");
-        gridStrokesShowCheckBox.setSelected(painterCanvas.getPixelGrid().isGridLineVisible());
+        gridStrokesShowCheckBox.setSelected(painterCanvas.getRectangleGrid().isGridLineVisible());
         gridStrokesShowCheckBox.setOnAction(event -> {
-                painterCanvas.getPixelGrid().setGridLineVisible(gridStrokesShowCheckBox.isSelected());
+                painterCanvas.getRectangleGrid().setGridLineVisible(gridStrokesShowCheckBox.isSelected());
                 painterCanvas.paint();
         });
 

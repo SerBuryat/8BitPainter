@@ -84,7 +84,7 @@ public class ColorsPalette extends GridPane {
 
         rect.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                painterCanvas.setCurrentPixelColor((Color) rect.getFill());
+                painterCanvas.setCurrentRectangleColor((Color) rect.getFill());
             }
         });
 

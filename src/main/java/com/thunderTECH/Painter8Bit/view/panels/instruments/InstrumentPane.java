@@ -65,7 +65,7 @@ public class InstrumentPane extends BorderPane {
             rect.setStrokeWidth(0.5);
             rect.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.PRIMARY) {
-                    painterCanvas.setCurrentPixelColor((Color) rect.getFill());
+                    painterCanvas.setCurrentRectangleColor((Color) rect.getFill());
                 }
             });
         });
@@ -76,7 +76,7 @@ public class InstrumentPane extends BorderPane {
     private ColorPicker getColorPicker(PainterCanvas painterCanvas) {
         ColorPicker colorPicker = new ColorPicker();
 
-        colorPicker.setOnAction(action -> painterCanvas.setCurrentPixelColor(colorPicker.getValue()));
+        colorPicker.setOnAction(action -> painterCanvas.setCurrentRectangleColor(colorPicker.getValue()));
 
         return colorPicker;
     }
