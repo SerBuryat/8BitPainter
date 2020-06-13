@@ -4,6 +4,7 @@ import com.thunderTECH.Painter8Bit.view.Viewer;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -16,6 +17,9 @@ public class Painter extends Application {
     private static int RECTANGLE_HEIGHT = 10;
     private static int CANVAS_WIDTH = 800;
     private static int CANVAS_HEIGHT = 600;
+    private static Color GRID_LINES_COLOR = Color.LIGHTGRAY;
+    private static Color RECTANGLE_COLOR = Color.TRANSPARENT;
+
     @Override
     public void start(Stage stage) {
         Scene scene = new Scene(Viewer.GET_VIEW_PANE(),1280,720);
@@ -57,5 +61,13 @@ public class Painter extends Application {
 
     public static int GET_RECTANGLE_HEIGHT() {
         return RECTANGLE_HEIGHT;
+    }
+
+    public static Color GET_GRID_LINES_COLOR() {
+        return GRID_LINES_COLOR;
+    }
+
+    public static Color GET_RECTANGLE_COLOR() {
+        return RECTANGLE_COLOR;
     }
 }

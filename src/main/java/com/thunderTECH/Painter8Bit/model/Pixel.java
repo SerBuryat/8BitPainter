@@ -1,5 +1,6 @@
 package com.thunderTECH.Painter8Bit.model;
 
+import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
 public class Pixel {
@@ -15,6 +16,11 @@ public class Pixel {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void paint(PixelWriter pixelGraphicWriter, Color color) {
+        setColor(color);
+        pixelGraphicWriter.setColor(x,y,this.color);
     }
 
     public int getX() {

@@ -4,7 +4,6 @@ import com.thunderTECH.Painter8Bit.Painter;
 import com.thunderTECH.Painter8Bit.control.CanvasMouseDragged;
 import com.thunderTECH.Painter8Bit.control.CanvasMousePressed;
 import com.thunderTECH.Painter8Bit.control.CanvasMouseScroll;
-import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
 import com.thunderTECH.Painter8Bit.model.RectangleGrid;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
@@ -21,7 +20,7 @@ import java.awt.image.RenderedImage;
 public class PainterCanvas {
     private final Canvas canvas;
     private final PixelWriter pixelGraphicWriter;
-    private RectangleGrid rectangleGrid;
+    private final RectangleGrid rectangleGrid;
     private Color currentRectangleColor;
 
     public PainterCanvas(int width, int height) {
@@ -37,12 +36,12 @@ public class PainterCanvas {
         paint();
     }
 
-    /** Paint single rectangle in given color with borders if grid lines visible **/
+    /** Paint single rectangle in given color **/
     public void paint(Rectangle rectangle, Color color) {
-        paintRectangle(rectangle, color);
+        rectangle.paint(pixelGraphicWriter, color);
 
         if (rectangleGrid.isGridLineVisible())
-            paintRectangleBorders(rectangle);
+            rectangle.paintBorders(pixelGraphicWriter, rectangleGrid.getLinesColor());
     }
     /** Paint or repaint given rectangles **/
     public void paint(Rectangle[] rectangles) {
@@ -51,7 +50,7 @@ public class PainterCanvas {
     }
     /** Paint or repaint all canvas **/
     public void paint() {
-        for(Rectangle[] rectangles : rectangleGrid.getGrid()) {
+        for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
             paint(rectangles);
         }
         if(rectangleGrid.isGridLineVisible())
@@ -59,7 +58,7 @@ public class PainterCanvas {
     }
     /** Clear all canvas **/
     public void clear() {
-        for(Rectangle[] rectangles : rectangleGrid.getGrid()) {
+        for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
             for (Rectangle rectangle : rectangles)
                 rectangle.setColor(Color.TRANSPARENT);
         }
@@ -68,24 +67,7 @@ public class PainterCanvas {
 
 
     public void paintGridLines() {
-        rectangleGrid.setGridLineVisible(true);
-        for(int x = 0; x < rectangleGrid.getWidth(); x++) {
-            for (int y = 0; y < rectangleGrid.getHeight(); y++) {
-                Rectangle rectangle = rectangleGrid.getGrid()[x][y];
-                // paint top rectangle border
-                for(int i = 0; i < rectangle.getWidth(); i++)
-                    pixelGraphicWriter.setColor(i, 0, rectangleGrid.getGridLinesColor());
-                // paint right rectangle border
-                for(int j = 0; j < rectangle.getHeight(); j++)
-                    pixelGraphicWriter.setColor(rectangle.getWidth(), j, rectangleGrid.getGridLinesColor());
-                // paint bottom rectangle border
-                for(int i = 0; i < rectangle.getWidth(); i++)
-                    pixelGraphicWriter.setColor(i, rectangle.getHeight(), rectangleGrid.getGridLinesColor());
-                // paint left rectangle border
-                for(int j = 0; j < rectangle.getWidth(); j++)
-                    pixelGraphicWriter.setColor(0, j, rectangleGrid.getGridLinesColor());
-            }
-        }
+        rectangleGrid.paint(pixelGraphicWriter, rectangleGrid.getLinesColor());
     }
 
     public void clearGridLines() {
@@ -117,15 +99,8 @@ public class PainterCanvas {
 
         for(int x = 0; x < snapshot.getWidth(); x++) {
             for(int y = 0; y < snapshot.getHeight(); y++) {
-                Color color;
-                Rectangle rectangle = getRectangleGrid().getRectangle(x,y);
-
-                if(rectangle == null)
-                    color = Color.TRANSPARENT;
-                else
-                    color = rectangle.getColor();
-
-                writer.setColor(x,y,color);
+                Rectangle rectangle = rectangleGrid.getRectangle(x,y);
+                writer.setColor(x,y,rectangle.getColor());
             }
         }
     }
@@ -154,31 +129,9 @@ public class PainterCanvas {
         int gridHeight = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECTANGLE_HEIGHT();
         int rectangleWidth = Painter.GET_RECTANGLE_WIDTH();
         int rectangleHeight = Painter.GET_RECTANGLE_HEIGHT();
-        return rectangleGrid = new RectangleGrid(gridWidth, gridHeight, rectangleWidth, rectangleHeight);
+        Color gridLinesColor = Painter.GET_GRID_LINES_COLOR();
+        Color rectangleColor = Painter.GET_RECTANGLE_COLOR();
+
+        return new RectangleGrid(gridWidth, gridHeight, rectangleWidth, rectangleHeight,gridLinesColor, rectangleColor);
     }
-
-    private void paintRectangle(Rectangle rectangle, Color color) {
-        rectangle.setColor(color);
-
-        for (Pixel[] pixels : rectangle.getPixels()) {
-            for (Pixel pixel : pixels)
-                pixelGraphicWriter.setColor(pixel.getX(), pixel.getY(), pixel.getColor());
-        }
-    }
-
-    private void paintRectangleBorders(Rectangle rectangle) {
-        // paint top rectangle border
-        for (int i = rectangle.getX(); i < rectangle.getX() + rectangle.getWidth(); i++)
-            pixelGraphicWriter.setColor(i, rectangle.getY(), rectangleGrid.getGridLinesColor());
-        // paint right rectangle border
-        for (int j = rectangle.getY(); j < rectangle.getY() + rectangle.getHeight(); j++)
-            pixelGraphicWriter.setColor(rectangle.getWidth(), j, rectangleGrid.getGridLinesColor());
-        // paint bottom rectangle border
-        for (int i = rectangle.getX(); i < rectangle.getX() + rectangle.getWidth(); i++)
-            pixelGraphicWriter.setColor(i, rectangle.getHeight(), rectangleGrid.getGridLinesColor());
-        // paint left rectangle border
-        for (int j = rectangle.getY(); j < rectangle.getY() + rectangle.getWidth(); j++)
-            pixelGraphicWriter.setColor(rectangle.getX(), j, rectangleGrid.getGridLinesColor());
-    }
-
 }
