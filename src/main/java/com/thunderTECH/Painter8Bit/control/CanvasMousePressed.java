@@ -17,8 +17,7 @@ public class CanvasMousePressed implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
 
-        Rectangle rectangle =
-                painterCanvas.getRectangleGrid().getRectangle((int)mouseEvent.getX(),(int)mouseEvent.getY());
+        Rectangle rectangle = painterCanvas.getRectangle((int)mouseEvent.getX(), (int)mouseEvent.getY());
 
         if(rectangle != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY)

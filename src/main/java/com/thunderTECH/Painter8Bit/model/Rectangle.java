@@ -22,7 +22,7 @@ public class Rectangle {
         // fill rectangle with pixels
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                pixels[i][j] = new Pixel(i+this.x,j+this.y,this.color);
+                pixels[i][j] = new Pixel(i+this.x,j+this.y,this.color, this);
             }
         }
     }
@@ -30,7 +30,7 @@ public class Rectangle {
     public void paint(PixelWriter pixelGraphicWriter, Color color) {
         setColor(color);
 
-        for (Pixel[] pixels : getPixels()) {
+        for (Pixel[] pixels : this.pixels) {
             for (Pixel pixel : pixels)
                 pixel.paint(pixelGraphicWriter, this.color);
         }
@@ -88,10 +88,7 @@ public class Rectangle {
         return height;
     }
 
-    public Pixel[][] getPixels() {
-        return pixels;
-    }
-
+    /** return Pixel which has x and y coordinates **/
     public Pixel getPixel(int x, int y) {
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
