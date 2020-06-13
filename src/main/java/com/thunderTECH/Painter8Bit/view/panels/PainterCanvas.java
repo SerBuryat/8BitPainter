@@ -46,31 +46,26 @@ public class PainterCanvas {
         if (rectangleGrid.isGridLineVisible())
             rectangle.paintBorders(pixelGraphicWriter, rectangleGrid.getLinesColor());
     }
-    /** Paint or repaint given rectangles **/
-    public void paint(Rectangle[] rectangles) {
-        for (Rectangle rectangle : rectangles)
-            paint(rectangle, rectangle.getColor());
-    }
     /** Paint or repaint all canvas **/
     public void paint() {
         for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
-            paint(rectangles);
+            for(Rectangle rectangle : rectangles)
+                paint(rectangle, rectangle.getColor());
         }
-        if(rectangleGrid.isGridLineVisible())
-            paintGridLines();
     }
     /** Clear all canvas **/
     public void clear() {
         for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
-            for (Rectangle rectangle : rectangles)
-                rectangle.setColor(Color.TRANSPARENT);
+            for (Rectangle rectangle : rectangles) {
+                paint(rectangle, Color.TRANSPARENT);
+            }
         }
-        paint();
     }
 
 
     public void paintGridLines() {
-        rectangleGrid.paint(pixelGraphicWriter, rectangleGrid.getLinesColor());
+        rectangleGrid.setGridLineVisible(true);
+        paint();
     }
 
     public void clearGridLines() {
@@ -125,9 +120,9 @@ public class PainterCanvas {
         return rectangleGrid;
     }
 
-    public Rectangle getRectangle(int x, int y) {
+    public Pixel getPixel(int x, int y) {
         if(checkCanvasBounds(x,y))
-            return pixels[x][y].getRectangle();
+            return pixels[x][y];
         return null;
     }
 

@@ -1,7 +1,7 @@
 package com.thunderTECH.Painter8Bit.model;
 
 
-import javafx.scene.image.PixelWriter;
+import com.thunderTECH.Painter8Bit.Painter;
 import javafx.scene.paint.Color;
 
 public class RectangleGrid {
@@ -25,24 +25,6 @@ public class RectangleGrid {
         }
     }
 
-    public void paint(PixelWriter pixelGraphicWriter, Color color) {
-        setGridLineVisible(true);
-        setLinesColor(color);
-        for(int x = 0; x < getWidth(); x++) {
-            for (int y = 0; y < getHeight(); y++) {
-                getRectangles()[x][y].paintBorders(pixelGraphicWriter, color);
-            }
-        }
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
     public Rectangle[][] getRectangles() {
         return rectangles;
     }
@@ -55,22 +37,14 @@ public class RectangleGrid {
         return isGridLineVisible;
     }
 
-    public void setLinesColor(Color linesColor) {
-        this.linesColor = linesColor;
-    }
-
     public Color getLinesColor() {
         return linesColor;
     }
 
     /** return rectangle which contains this x and y coordinates **/
     public Rectangle getRectangle(int x, int y) {
-        for(Rectangle[] rectangles : rectangles) {
-            for (Rectangle rectangle : rectangles) {
-                if(rectangle.contains(x, y))
-                    return rectangle;
-            }
-        }
-        return null;
+        int posX = x / Painter.GET_RECTANGLE_WIDTH();
+        int posY = y / Painter.GET_RECTANGLE_HEIGHT();
+        return rectangles[posX][posY];
     }
 }

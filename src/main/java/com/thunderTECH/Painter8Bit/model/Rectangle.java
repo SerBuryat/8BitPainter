@@ -51,14 +51,6 @@ public class Rectangle {
             pixelGraphicWriter.setColor(getX(), j, color);
     }
 
-    /** Return true if rectangle contains x and y coordinates in it**/
-    public boolean contains(int x, int y) {
-        int maxX = this.x + this.width - 1;
-        int maxY = this.y + this.height - 1;
-
-        return ((x >= this.x && x <= maxX) && (y >= this.y && y <= maxY));
-    }
-
     public void setColor(Color color) {
         this.color = color;
 
