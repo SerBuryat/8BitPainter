@@ -13,12 +13,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class Painter extends Application {
-    private static int RECTANGLE_WIDTH = 10;
-    private static int RECTANGLE_HEIGHT = 10;
+    private static int RECT_WIDTH = 10;
+    private static int RECT_HEIGHT = 10;
     private static int CANVAS_WIDTH = 800;
     private static int CANVAS_HEIGHT = 600;
     private static Color GRID_LINES_COLOR = Color.LIGHTGRAY;
-    private static Color RECTANGLE_COLOR = Color.TRANSPARENT;
+    private static Color RECT_COLOR = Color.TRANSPARENT;
 
     @Override
     public void start(Stage stage) {
@@ -55,19 +55,19 @@ public class Painter extends Application {
         return CANVAS_HEIGHT;
     }
 
-    public static int GET_RECTANGLE_WIDTH() {
-        return RECTANGLE_WIDTH;
+    public static int GET_RECT_WIDTH() {
+        return RECT_WIDTH;
     }
 
-    public static int GET_RECTANGLE_HEIGHT() {
-        return RECTANGLE_HEIGHT;
+    public static int GET_RECT_HEIGHT() {
+        return RECT_HEIGHT;
     }
 
     public static Color GET_GRID_LINES_COLOR() {
         return GRID_LINES_COLOR;
     }
 
-    public static Color GET_RECTANGLE_COLOR() {
-        return RECTANGLE_COLOR;
+    public static Color GET_RECT_COLOR() {
+        return RECT_COLOR;
     }
 }

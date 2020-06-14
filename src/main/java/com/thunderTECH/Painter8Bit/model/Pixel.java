@@ -36,6 +36,7 @@ public class Pixel {
     public Color getColor() {
         return color;
     }
+
     /** gives rectangle which has this pixel **/
     public Rectangle getRectangle() {
         return rectOwner;

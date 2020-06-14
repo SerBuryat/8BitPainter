@@ -6,7 +6,6 @@ import com.thunderTECH.Painter8Bit.control.CanvasMousePressed;
 import com.thunderTECH.Painter8Bit.control.CanvasMouseScroll;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
-import com.thunderTECH.Painter8Bit.model.RectangleGrid;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -21,15 +20,22 @@ import java.awt.image.RenderedImage;
 public class PainterCanvas {
     private final Canvas canvas;
     private final PixelWriter pixelGraphicWriter;
-    private final RectangleGrid rectangleGrid;
+    private final Rectangle[][] rectangles;
     private final Pixel[][] pixels;
+    private boolean isGridLineVisible;
+    private Color gridLinesColor;
     private Color currentRectangleColor;
 
+
     public PainterCanvas(int width, int height) {
-        canvas = new Canvas(width, height);
-        rectangleGrid = createPixelGrid();
+        canvas = createCanvas(width,height);
+        rectangles = createRectangles();
         pixels = createPixels();
+
         pixelGraphicWriter = canvas.getGraphicsContext2D().getPixelWriter();
+
+        isGridLineVisible = true;
+        gridLinesColor = Painter.GET_GRID_LINES_COLOR();
         currentRectangleColor = Color.BLACK;
 
         canvas.setOnMousePressed(new CanvasMousePressed(this));
@@ -43,19 +49,19 @@ public class PainterCanvas {
     public void paint(Rectangle rectangle, Color color) {
         rectangle.paint(pixelGraphicWriter, color);
 
-        if (rectangleGrid.isGridLineVisible())
-            rectangle.paintBorders(pixelGraphicWriter, rectangleGrid.getLinesColor());
+        if (isGridLineVisible)
+            rectangle.paintBorders(pixelGraphicWriter, gridLinesColor);
     }
     /** Paint or repaint all canvas **/
     public void paint() {
-        for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
+        for(Rectangle[] rectangles : this.rectangles) {
             for(Rectangle rectangle : rectangles)
                 paint(rectangle, rectangle.getColor());
         }
     }
     /** Clear all canvas **/
     public void clear() {
-        for(Rectangle[] rectangles : rectangleGrid.getRectangles()) {
+        for(Rectangle[] rectangles : this.rectangles) {
             for (Rectangle rectangle : rectangles) {
                 paint(rectangle, Color.TRANSPARENT);
             }
@@ -64,16 +70,16 @@ public class PainterCanvas {
 
 
     public void paintGridLines() {
-        rectangleGrid.setGridLineVisible(true);
+        setGridLineVisible(true);
         paint();
     }
 
     public void clearGridLines() {
-        rectangleGrid.setGridLineVisible(false);
+        setGridLineVisible(false);
         paint();
     }
 
-    /** makes canvas snapshot and save it like .png **/
+
     public RenderedImage getSnapshotImage() {
         clearGridLines();
 
@@ -112,33 +118,69 @@ public class PainterCanvas {
         return currentRectangleColor;
     }
 
+
+    public void setGridLineVisible(boolean isGridLineVisible) {
+        this.isGridLineVisible = isGridLineVisible;
+    }
+
+    public boolean isGridLineVisible() {
+        return isGridLineVisible;
+    }
+
+
     public Canvas getCanvas() {
         return canvas;
     }
 
-    public RectangleGrid getRectangleGrid() {
-        return rectangleGrid;
+    public Rectangle getRectangle(int x, int y) {
+        int posX = x / Painter.GET_RECT_WIDTH();
+        int posY = y / Painter.GET_RECT_HEIGHT();
+
+        if(isCorrectCanvasBounds(posX,posY))
+            return rectangles[posX][posY];
+
+        return null;
     }
 
     public Pixel getPixel(int x, int y) {
-        if(checkCanvasBounds(x,y))
+        if(isCorrectCanvasBounds(x,y))
             return pixels[x][y];
         return null;
     }
 
-    private boolean checkCanvasBounds(int x, int y) {
+    private boolean isCorrectCanvasBounds(int x, int y) {
         return (x >= 0 && x < canvas.getWidth()) && (y >= 0 && y < canvas.getHeight());
     }
 
-    private RectangleGrid createPixelGrid() {
-        int gridWidth = Painter.GET_CANVAS_WIDTH() / Painter.GET_RECTANGLE_WIDTH();
-        int gridHeight = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECTANGLE_HEIGHT();
-        int rectangleWidth = Painter.GET_RECTANGLE_WIDTH();
-        int rectangleHeight = Painter.GET_RECTANGLE_HEIGHT();
-        Color gridLinesColor = Painter.GET_GRID_LINES_COLOR();
-        Color rectangleColor = Painter.GET_RECTANGLE_COLOR();
 
-        return new RectangleGrid(gridWidth, gridHeight, rectangleWidth, rectangleHeight,gridLinesColor, rectangleColor);
+    private Canvas createCanvas(double width, double height) {
+        Canvas canvas = new Canvas(width,height);
+
+        //change canvas size if it can't divide size completely(with reminder)
+        if(canvas.getWidth() % Painter.GET_RECT_WIDTH() != 0 || canvas.getHeight() % Painter.GET_RECT_HEIGHT() != 0) {
+            canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_WIDTH()));
+            canvas.setHeight(canvas.getHeight() - (canvas.getHeight() % Painter.GET_RECT_HEIGHT()));
+        }
+
+        return canvas;
+    }
+
+    private Rectangle[][] createRectangles() {
+        int width = Painter.GET_CANVAS_WIDTH() / Painter.GET_RECT_WIDTH();
+        int height = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECT_HEIGHT();
+        Rectangle[][] rectangles = new Rectangle[width][height];
+
+        int rectWidth = Painter.GET_RECT_WIDTH();
+        int rectHeight = Painter.GET_RECT_HEIGHT();
+        Color rectColor = Painter.GET_RECT_COLOR();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                rectangles[x][y] = new Rectangle(x,y,rectWidth,rectHeight,rectColor);
+            }
+        }
+
+        return rectangles;
     }
 
     private Pixel[][] createPixels() {
@@ -146,7 +188,7 @@ public class PainterCanvas {
 
         for(int x = 0; x < canvas.getWidth(); x++) {
             for(int y = 0; y < canvas.getHeight(); y++) {
-                pixels[x][y] = rectangleGrid.getRectangle(x,y).getPixel(x,y);
+                pixels[x][y] = getRectangle(x,y).getPixel(x,y);
             }
         }
 

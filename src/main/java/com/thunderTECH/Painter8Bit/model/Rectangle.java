@@ -8,7 +8,7 @@ public class Rectangle {
     private int height;
     private final int x;
     private final int y;
-    private final Pixel[][] pixels;
+    private Pixel[][] pixels;
     private Color color;
 
     public Rectangle(int x, int y, int width, int height, Color color) {
