@@ -13,8 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Painter extends Application {
-    private static int RECT_WIDTH = 10;
-    private static int RECT_HEIGHT = 10;
+    private static int RECT_SIZE = 10; //SIZExSIZE rect
     private static int CANVAS_WIDTH = 800;
     private static int CANVAS_HEIGHT = 600;
     private static Color GRID_LINES_COLOR = Color.LIGHTGRAY;
@@ -55,12 +54,8 @@ public class Painter extends Application {
         return CANVAS_HEIGHT;
     }
 
-    public static int GET_RECT_WIDTH() {
-        return RECT_WIDTH;
-    }
-
-    public static int GET_RECT_HEIGHT() {
-        return RECT_HEIGHT;
+    public static int GET_RECT_SIZE() {
+        return RECT_SIZE;
     }
 
     public static Color GET_GRID_LINES_COLOR() {

@@ -1,7 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.ActionBuffer;
-import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;

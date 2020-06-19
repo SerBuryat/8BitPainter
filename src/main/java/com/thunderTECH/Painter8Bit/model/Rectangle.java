@@ -4,11 +4,11 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
 public class Rectangle {
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private final int x;
     private final int y;
-    private Pixel[][] pixels;
+    private final Pixel[][] pixels;
     private Color color;
 
     public Rectangle(int x, int y, int width, int height, Color color) {
@@ -37,26 +37,28 @@ public class Rectangle {
     }
 
     public void paintBorders(PixelWriter pixelGraphicWriter, Color color) {
-        // paint top rectangle border
-        for (int i = getX(); i < getX() + getWidth(); i++)
-            pixelGraphicWriter.setColor(i, getY(), color);
-        // paint right rectangle border
-        for (int j = getY(); j < getY() + getHeight(); j++)
-            pixelGraphicWriter.setColor(getWidth(), j, color);
-        // paint bottom rectangle border
-        for (int i = getX(); i < getX() + getWidth(); i++)
-            pixelGraphicWriter.setColor(i, getHeight(), color);
-        // paint left rectangle border
-        for (int j = getY(); j < getY() + getWidth(); j++)
-            pixelGraphicWriter.setColor(getX(), j, color);
+
+        for (int i = getX(); i < getX() + getWidth(); i++) {
+            // top border
+            getPixel(i, getY()).paint(pixelGraphicWriter, color);
+            //bottom border
+            getPixel(i, getY() + getHeight()-1).paint(pixelGraphicWriter, color);
+        }
+
+        for (int j = getY(); j < getY() + getHeight(); j++) {
+            // left border
+            getPixel(getX(), j).paint(pixelGraphicWriter, color);
+            // right border
+            getPixel(getX()+ getWidth()-1, j).paint(pixelGraphicWriter,color);
+        }
     }
 
     public void setColor(Color color) {
         this.color = color;
 
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++)
-                pixels[i][j].setColor(color);
+        for(Pixel[] pixels : this.pixels) {
+            for(Pixel pixel : pixels)
+                pixel.setColor(color);
         }
     }
 
@@ -94,7 +96,9 @@ public class Rectangle {
     @Override
     public String toString() {
         return "Rectangle{" +
-                "x=" + x +
+                "width=" + width +
+                ", height=" + height +
+                ", x=" + x +
                 ", y=" + y +
                 ", color=" + color +
                 '}';

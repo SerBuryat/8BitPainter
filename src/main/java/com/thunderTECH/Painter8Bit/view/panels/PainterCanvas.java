@@ -23,7 +23,7 @@ public class PainterCanvas {
     private final Rectangle[][] rectangles;
     private final Pixel[][] pixels;
     private boolean isGridLineVisible;
-    private Color gridLinesColor;
+    private final Color gridLinesColor;
     private Color currentRectangleColor;
 
 
@@ -133,8 +133,8 @@ public class PainterCanvas {
     }
 
     public Rectangle getRectangle(int x, int y) {
-        int posX = x / Painter.GET_RECT_WIDTH();
-        int posY = y / Painter.GET_RECT_HEIGHT();
+        int posX = x / Painter.GET_RECT_SIZE();
+        int posY = y / Painter.GET_RECT_SIZE();
 
         if(isCorrectCanvasBounds(posX,posY))
             return rectangles[posX][posY];
@@ -157,21 +157,21 @@ public class PainterCanvas {
         Canvas canvas = new Canvas(width,height);
 
         //change canvas size if it can't divide size completely(with reminder)
-        if(canvas.getWidth() % Painter.GET_RECT_WIDTH() != 0 || canvas.getHeight() % Painter.GET_RECT_HEIGHT() != 0) {
-            canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_WIDTH()));
-            canvas.setHeight(canvas.getHeight() - (canvas.getHeight() % Painter.GET_RECT_HEIGHT()));
+        if(canvas.getWidth() % Painter.GET_RECT_SIZE() != 0 || canvas.getHeight() % Painter.GET_RECT_SIZE() != 0) {
+            canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_SIZE()));
+            canvas.setHeight(canvas.getHeight() - (canvas.getHeight() % Painter.GET_RECT_SIZE()));
         }
 
         return canvas;
     }
 
     private Rectangle[][] createRectangles() {
-        int width = Painter.GET_CANVAS_WIDTH() / Painter.GET_RECT_WIDTH();
-        int height = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECT_HEIGHT();
+        int width = Painter.GET_CANVAS_WIDTH() / Painter.GET_RECT_SIZE();
+        int height = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECT_SIZE();
         Rectangle[][] rectangles = new Rectangle[width][height];
 
-        int rectWidth = Painter.GET_RECT_WIDTH();
-        int rectHeight = Painter.GET_RECT_HEIGHT();
+        int rectWidth = Painter.GET_RECT_SIZE();
+        int rectHeight = Painter.GET_RECT_SIZE();
         Color rectColor = Painter.GET_RECT_COLOR();
 
         for (int x = 0; x < width; x++) {

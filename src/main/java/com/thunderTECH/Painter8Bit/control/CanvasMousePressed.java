@@ -20,8 +20,10 @@ public class CanvasMousePressed implements EventHandler<MouseEvent> {
         Pixel pixel = painterCanvas.getPixel((int)mouseEvent.getX(), (int)mouseEvent.getY());
 
         if(pixel != null) {
-            if (mouseEvent.getButton() == MouseButton.PRIMARY)
+            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                 painterCanvas.paint(pixel.getRectangle(), painterCanvas.getCurrentRectangleColor());
+                //System.out.println(mouseEvent.getX() + " " + mouseEvent.getY());
+            }
 
             if (mouseEvent.getButton() == MouseButton.SECONDARY)
                 painterCanvas.setCurrentRectangleColor(pixel.getRectangle().getColor());

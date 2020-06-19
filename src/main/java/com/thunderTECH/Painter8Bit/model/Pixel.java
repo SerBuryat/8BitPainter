@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 public class Pixel {
     private final int x;
     private final int y;
+    private final Rectangle rectOwner;
     private Color color;
-    private Rectangle rectOwner;
 
     public Pixel(int x, int y, Color color, Rectangle rectOwner) {
         this.x = x;
