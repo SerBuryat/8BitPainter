@@ -12,7 +12,7 @@ public class SettingsPanel extends GridPane {
         this.getStylesheets().add("css-styles/settings-panel-style.css");
 
         this.add(getSaveImageButton(paintPane),0,0);
-        //this.add(getLoadImageButton(paintPane),1,0);
+        this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPainterCanvasButton(paintPane),2,0);
         this.add(getCanvasGridLineVisibleCheckBox(paintPane), 3, 0);
         //this.add(getChangePaintPaneSizePane(paintPane),4,0);
@@ -28,12 +28,12 @@ public class SettingsPanel extends GridPane {
         return saveImageButton;
     }
 
-    /*private Button getLoadImageButton(PainterCanvas painterCanvas) {
+    private Button getLoadImageButton(PainterCanvas painterCanvas) {
         Button loadImageButton = new Button("Load image from...");
-        loadImageButton.setOnAction(event -> painterCanvas.loadImageToPaintPane());
+        loadImageButton.setOnAction(event -> Painter.LOAD_PAINTER_CANVAS_IMAGE(painterCanvas));
 
         return loadImageButton;
-    }*/
+    }
 
     private Button getClearPainterCanvasButton(PainterCanvas painterCanvas) {
         Button clearPaintPaneButton = new Button("Clear panel");

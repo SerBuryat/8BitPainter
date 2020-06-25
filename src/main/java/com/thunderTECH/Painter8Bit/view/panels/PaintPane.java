@@ -253,9 +253,7 @@ public class PaintPane extends Canvas {
         this.gridHeight = paintPaneHeight / paintPaneRectHeight;
 
         Rectangle[][] previousRectGrid = rectanglesGrid;
-
         rectanglesGrid = getRectanglesGridArray(gridWidth, gridHeight);
-
         copyPreviousGridToNewRectGrid(previousRectGrid, rectanglesGrid);
 
         repaintPaintPane();

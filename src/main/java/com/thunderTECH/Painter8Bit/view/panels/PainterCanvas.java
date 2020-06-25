@@ -11,6 +11,8 @@ import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -18,12 +20,12 @@ import javafx.scene.paint.Color;
 import java.awt.image.RenderedImage;
 
 public class PainterCanvas {
-    private final Canvas canvas;
-    private final PixelWriter pixelGraphicWriter;
-    private final Rectangle[][] rectangles;
-    private final Pixel[][] pixels;
+    private Canvas canvas;
+    private PixelWriter pixelGraphicWriter;
+    private Rectangle[][] rectangles;
+    private Pixel[][] pixels;
     private boolean isGridLineVisible;
-    private final Color gridLinesColor;
+    private Color gridLinesColor;
     private Color currentRectangleColor;
 
 
@@ -79,6 +81,29 @@ public class PainterCanvas {
         paint();
     }
 
+
+    public void loadImage(Image loadedImage) {
+        setGridLineVisible(false);
+        clear();
+
+        setCanvasSize(loadedImage.getWidth(), loadedImage.getHeight());
+
+        PixelReader loadedImagePixelReader = loadedImage.getPixelReader();
+        for (int x = 0; x < rectangles.length; x++) {
+            for (int y = 0; y < rectangles[0].length; y++) {
+
+                int corr = Painter.GET_RECT_SIZE() / 2;
+                int pixelPosX = x * Painter.GET_RECT_SIZE() + corr;
+                int pixelPosY = y * Painter.GET_RECT_SIZE() + corr;
+
+                rectangles[x][y].setColor
+                        (loadedImagePixelReader.getColor(pixelPosX, pixelPosY));
+            }
+        }
+
+        setGridLineVisible(true);
+        paint();
+    }
 
     public RenderedImage getSnapshotImage() {
         clearGridLines();
@@ -155,19 +180,29 @@ public class PainterCanvas {
 
     private Canvas createCanvas(double width, double height) {
         Canvas canvas = new Canvas(width,height);
+        canvasSizeCorrection(canvas);
+        return canvas;
+    }
 
-        //change canvas size if it can't divide size completely(with reminder)
+    private void setCanvasSize(double width, double height) {
+        canvas.setWidth(width);
+        canvas.setHeight(height);
+        canvasSizeCorrection(canvas);
+
+        rectangles = createRectangles();
+        pixels = createPixels();
+    }
+
+    private void canvasSizeCorrection(Canvas canvas) {
         if(canvas.getWidth() % Painter.GET_RECT_SIZE() != 0 || canvas.getHeight() % Painter.GET_RECT_SIZE() != 0) {
             canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_SIZE()));
             canvas.setHeight(canvas.getHeight() - (canvas.getHeight() % Painter.GET_RECT_SIZE()));
         }
-
-        return canvas;
     }
 
     private Rectangle[][] createRectangles() {
-        int width = Painter.GET_CANVAS_WIDTH() / Painter.GET_RECT_SIZE();
-        int height = Painter.GET_CANVAS_HEIGHT() / Painter.GET_RECT_SIZE();
+        int width = (int) (canvas.getWidth() / Painter.GET_RECT_SIZE());
+        int height = (int) (canvas.getHeight() / Painter.GET_RECT_SIZE());
         Rectangle[][] rectangles = new Rectangle[width][height];
 
         int rectWidth = Painter.GET_RECT_SIZE();

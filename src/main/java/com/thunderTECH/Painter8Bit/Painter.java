@@ -4,6 +4,7 @@ import com.thunderTECH.Painter8Bit.view.Viewer;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -43,6 +44,16 @@ public class Painter extends Application {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    public static void LOAD_PAINTER_CANVAS_IMAGE(PainterCanvas painterCanvas) {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+
+        if(file != null){
+            Image loadedImage = new Image(file.toURI().toString());
+            painterCanvas.loadImage(loadedImage);
         }
     }
 
