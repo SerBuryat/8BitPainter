@@ -81,8 +81,37 @@ public class PainterCanvas {
         paint();
     }
 
+    /** Sets default canvas position(remove scale and scroll params) **/
+    public void setCanvasSize(double width, double height) {
+        if(width > 800)
+            width = 800;
+        if(width < 100)
+            width = 100;
+
+        if(height > 600)
+            height = 600;
+        if(height < 100)
+            height = 100;
+
+        canvas.setWidth(width);
+        canvas.setHeight(height);
+        canvasSizeCorrection(canvas);
+
+        rectangles = createRectangles();
+        pixels = createPixels();
+
+        paint();
+    }
+
+    public void setPainterCanvasDefaultPosition() {
+        canvas.getTransforms().clear();
+        canvas.setTranslateX(0.0);
+        canvas.setTranslateY(0.0);
+    }
+
 
     public void loadImage(Image loadedImage) {
+        setPainterCanvasDefaultPosition();
         setGridLineVisible(false);
         clear();
 
@@ -106,6 +135,7 @@ public class PainterCanvas {
     }
 
     public RenderedImage getSnapshotImage() {
+        setPainterCanvasDefaultPosition();
         clearGridLines();
 
         //Pad the capture area
@@ -183,16 +213,7 @@ public class PainterCanvas {
         canvasSizeCorrection(canvas);
         return canvas;
     }
-
-    private void setCanvasSize(double width, double height) {
-        canvas.setWidth(width);
-        canvas.setHeight(height);
-        canvasSizeCorrection(canvas);
-
-        rectangles = createRectangles();
-        pixels = createPixels();
-    }
-
+    /** Change canvas size if it divides with reminder **/
     private void canvasSizeCorrection(Canvas canvas) {
         if(canvas.getWidth() % Painter.GET_RECT_SIZE() != 0 || canvas.getHeight() % Painter.GET_RECT_SIZE() != 0) {
             canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_SIZE()));

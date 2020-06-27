@@ -1,6 +1,7 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.Painter;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
@@ -15,9 +16,8 @@ public class SettingsPanel extends GridPane {
         this.add(getLoadImageButton(paintPane),1,0);
         this.add(getClearPainterCanvasButton(paintPane),2,0);
         this.add(getCanvasGridLineVisibleCheckBox(paintPane), 3, 0);
-        //this.add(getChangePaintPaneSizePane(paintPane),4,0);
-        //this.add(getDefaultPaintPanePosition(paintPane),5,0);
-        //this.add(getShowHelpButton(), 6, 0);
+        this.add(getChangePainterCanvasSizePane(paintPane),4,0);
+        this.add(getDefaultPaintPanePosition(paintPane),5,0);
     }
 
     private Button getSaveImageButton(PainterCanvas painterCanvas) {
@@ -53,48 +53,26 @@ public class SettingsPanel extends GridPane {
         return gridStrokesShowCheckBox;
     }
 
-    /*private Button getDefaultPaintPanePosition(PainterCanvas paintPane) {
-        Button defaultSizePaintPaneButton = new Button("paintPane default position ");
+    private Button getDefaultPaintPanePosition(PainterCanvas painterCanvas) {
+        Button defaultSizePaintPaneButton = new Button("painterCanvas default position ");
 
-        defaultSizePaintPaneButton.setOnAction(action -> paintPane.setPaintPaneDefaultPosition());
+        defaultSizePaintPaneButton.setOnAction(action -> painterCanvas.setPainterCanvasDefaultPosition());
 
         return defaultSizePaintPaneButton;
-    }*/
+    }
 
-    /*private Button getShowHelpButton() {
-        Button showHelpButton = new Button("Help");
-
-        showHelpButton.setOnAction(event -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Help");
-            alert.setContentText("Right mouse button (click) -> draw rectangle; "
-                    + "\n"
-                    +"Right mouse button (pressed&moved) -> draw line of rectangles on the way of moving; "
-                    + "\n"
-                    + "Left mouse button (click) -> 'take' color from rectangle;"
-                    + "\n"
-                    + "Middle mouse button (pressed&moved) -> allow to move paintPane ;"
-                    + "\n"
-                    + "Middle mouse button (scrolling) -> allow to scrolling(zooming) paintPane ;");
-
-            alert.showAndWait();
-        });
-
-        return showHelpButton;
-    }*/
-
-    /*private GridPane getChangePaintPaneSizePane(PainterCanvas paintPane) {
+    private GridPane getChangePainterCanvasSizePane(PainterCanvas painterCanvas) {
         GridPane changePaintPaneSizePane = new GridPane();
 
         Label widthText = new Label("Width:");
         Label heightText = new Label("Height:");
 
-        TextField widthField = new TextField(String.valueOf((int)paintPane.getWidth()));
-        TextField heightField = new TextField(String.valueOf((int)paintPane.getHeight()));
+        TextField widthField = new TextField(String.valueOf((int)painterCanvas.getCanvas().getWidth()));
+        TextField heightField = new TextField(String.valueOf((int)painterCanvas.getCanvas().getHeight()));
 
         Button changeSizeButton = new Button("Change size");
         changeSizeButton.setOnAction(actionEvent ->
-                paintPane.setPaintPaneSize
+                painterCanvas.setCanvasSize
                         (Integer.parseInt(widthField.getText()),Integer.parseInt(heightField.getText())));
 
         changePaintPaneSizePane.add(widthText,0,0);
@@ -106,5 +84,5 @@ public class SettingsPanel extends GridPane {
         changePaintPaneSizePane.setPadding(new Insets(10,10,10,10));
 
         return changePaintPaneSizePane;
-    }*/
+    }
 }
