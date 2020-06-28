@@ -28,6 +28,12 @@ public class PainterCanvas {
     private Color gridLinesColor;
     private Color currentRectangleColor;
 
+    // canvas mouse dragging params
+    private double canvasDragX;
+    private double canvasDragY;
+    private double canvasTranslateX;
+    private double canvasTranslateY;
+
 
     public PainterCanvas(int width, int height) {
         canvas = createCanvas(width,height);
@@ -207,13 +213,38 @@ public class PainterCanvas {
         return (x >= 0 && x < canvas.getWidth()) && (y >= 0 && y < canvas.getHeight());
     }
 
+    public void setCanvasDragX(double canvasDragX) {
+        this.canvasDragX = canvasDragX;
+    }
+    public void setCanvasDragY(double canvasDragY) {
+        this.canvasDragY = canvasDragY;
+    }
+    public double getCanvasDragX() {
+        return canvasDragX;
+    }
+    public double getCanvasDragY() {
+        return canvasDragY;
+    }
+
+    public void setCanvasTranslateX(double canvasTranslateX) {
+        this.canvasTranslateX = canvasTranslateX;
+    }
+    public void setCanvasTranslateY(double canvasTranslateY) {
+        this.canvasTranslateY = canvasTranslateY;
+    }
+    public double getCanvasTranslateX() {
+        return canvasTranslateX;
+    }
+    public double getCanvasTranslateY() {
+        return canvasTranslateY;
+    }
 
     private Canvas createCanvas(double width, double height) {
         Canvas canvas = new Canvas(width,height);
         canvasSizeCorrection(canvas);
         return canvas;
     }
-    /** Change canvas size if it divides with reminder **/
+    /** Change canvas size if it doesn't divide completely (with reminder) **/
     private void canvasSizeCorrection(Canvas canvas) {
         if(canvas.getWidth() % Painter.GET_RECT_SIZE() != 0 || canvas.getHeight() % Painter.GET_RECT_SIZE() != 0) {
             canvas.setWidth(canvas.getWidth() - (canvas.getWidth() % Painter.GET_RECT_SIZE()));

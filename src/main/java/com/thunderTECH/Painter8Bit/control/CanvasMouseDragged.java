@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 public class CanvasMouseDragged implements EventHandler<MouseEvent> {
     private final PainterCanvas painterCanvas;
 
+
     public CanvasMouseDragged(PainterCanvas painterCanvas) {
         this.painterCanvas = painterCanvas;
     }
@@ -20,6 +21,14 @@ public class CanvasMouseDragged implements EventHandler<MouseEvent> {
         if(pixel != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY)
                 painterCanvas.paint(pixel.getRectangle(), painterCanvas.getCurrentRectangleColor());
+        }
+
+        if(mouseEvent.getButton() == MouseButton.MIDDLE) {
+            double offsetX = mouseEvent.getSceneX() - painterCanvas.getCanvasDragX();
+            double offsetY = mouseEvent.getSceneY() - painterCanvas.getCanvasDragY();
+
+            painterCanvas.getCanvas().setTranslateX(painterCanvas.getCanvasTranslateX() + offsetX);
+            painterCanvas.getCanvas().setTranslateY(painterCanvas.getCanvasTranslateY() + offsetY);
         }
     }
 }
