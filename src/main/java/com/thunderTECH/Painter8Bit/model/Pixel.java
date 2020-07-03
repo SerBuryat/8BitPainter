@@ -3,7 +3,7 @@ package com.thunderTECH.Painter8Bit.model;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
-public class Pixel {
+public class Pixel  {
     private final int x;
     private final int y;
     private final Rectangle rectOwner;
@@ -22,7 +22,7 @@ public class Pixel {
 
     public void paint(PixelWriter pixelGraphicWriter, Color color) {
         setColor(color);
-        pixelGraphicWriter.setColor(x,y,this.color);
+        pixelGraphicWriter.setColor(x,y,color);
     }
 
     public int getX() {

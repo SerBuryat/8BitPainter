@@ -12,27 +12,37 @@ public class SettingsPanel extends GridPane {
         this.getStyleClass().add("settings-pane");
         this.getStylesheets().add("css-styles/settings-panel-style.css");
 
-        this.add(getSaveImageButton(paintPane),0,0);
-        this.add(getLoadImageButton(paintPane),1,0);
-        this.add(getClearPainterCanvasButton(paintPane),2,0);
-        this.add(getCanvasGridLineVisibleCheckBox(paintPane), 3, 0);
-        this.add(getChangePainterCanvasSizePane(paintPane),4,0);
-        this.add(getDefaultPaintPanePosition(paintPane),5,0);
+        this.add(getSaveProjectButton(paintPane),0,0);
+        this.add(getLoadProjectButton(paintPane),1,0);
+        this.add(getSaveImageButton(paintPane),2,0);
+        this.add(getClearPainterCanvasButton(paintPane),3,0);
+        this.add(getCanvasGridLineVisibleCheckBox(paintPane), 4, 0);
+        this.add(getChangePainterCanvasSizePane(paintPane),5,0);
+        this.add(getDefaultPaintPanePosition(paintPane),6,0);
     }
 
     private Button getSaveImageButton(PainterCanvas painterCanvas) {
-        Button saveImageButton = new Button("Save image as...");
+        Button saveImageButton = new Button("Save project as png");
 
-        saveImageButton.setOnAction(event -> Painter.SAVE_PAINTER_CANVAS_IMAGE(painterCanvas));
+        saveImageButton.setOnAction(event -> Painter.SAVE_PAINTER_CANVAS_IMAGE_AS_PNG(painterCanvas));
 
         return saveImageButton;
     }
 
-    private Button getLoadImageButton(PainterCanvas painterCanvas) {
-        Button loadImageButton = new Button("Load image from...");
-        loadImageButton.setOnAction(event -> Painter.LOAD_PAINTER_CANVAS_IMAGE(painterCanvas));
+    private Button getSaveProjectButton(PainterCanvas painterCanvas) {
+        Button saveImageButton = new Button("Save project");
 
-        return loadImageButton;
+        saveImageButton.setOnAction(event -> Painter.SAVE_PROJECT(painterCanvas));
+
+        return saveImageButton;
+    }
+
+    private Button getLoadProjectButton(PainterCanvas painterCanvas) {
+        Button saveImageButton = new Button("Load project");
+
+        saveImageButton.setOnAction(event -> Painter.LOAD_PROJECT(painterCanvas));
+
+        return saveImageButton;
     }
 
     private Button getClearPainterCanvasButton(PainterCanvas painterCanvas) {

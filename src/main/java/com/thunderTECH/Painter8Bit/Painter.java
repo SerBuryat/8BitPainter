@@ -17,8 +17,8 @@ public class Painter extends Application {
     private static int RECT_SIZE = 10; //SIZExSIZE rect
     private static int CANVAS_WIDTH = 800;
     private static int CANVAS_HEIGHT = 600;
-    private static Color GRID_LINES_COLOR = Color.LIGHTGRAY;
-    private static Color RECT_COLOR = Color.TRANSPARENT;
+    private static final Color GRID_LINES_COLOR = Color.LIGHTGRAY;
+    private static final Color RECT_COLOR = Color.TRANSPARENT;
 
     @Override
     public void start(Stage stage) {
@@ -33,7 +33,7 @@ public class Painter extends Application {
         launch(args);
     }
 
-    public static void SAVE_PAINTER_CANVAS_IMAGE(PainterCanvas painterCanvas) {
+    public static void SAVE_PAINTER_CANVAS_IMAGE_AS_PNG(PainterCanvas painterCanvas) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
         File file = fileChooser.showSaveDialog(null);
@@ -47,14 +47,16 @@ public class Painter extends Application {
         }
     }
 
-    public static void LOAD_PAINTER_CANVAS_IMAGE(PainterCanvas painterCanvas) {
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(null);
+    public static void SAVE_PROJECT(PainterCanvas painterCanvas) {
+        painterCanvas.saveCanvas();
 
-        if(file != null){
-            Image loadedImage = new Image(file.toURI().toString());
-            painterCanvas.loadImage(loadedImage);
-        }
+        System.out.println("Project saved to c:\\Painter project\\");
+    }
+
+    public static void LOAD_PROJECT(PainterCanvas painterCanvas) {
+        painterCanvas.loadCanvas();
+
+        System.out.println("Project loaded!");
     }
 
     public static int GET_CANVAS_WIDTH() {

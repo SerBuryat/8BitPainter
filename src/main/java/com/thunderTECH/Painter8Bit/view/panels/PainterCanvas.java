@@ -11,16 +11,15 @@ import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import java.awt.image.RenderedImage;
+import java.io.*;
 
-public class PainterCanvas {
-    private Canvas canvas;
+public class PainterCanvas implements Serializable {
+    private final Canvas canvas;
     private PixelWriter pixelGraphicWriter;
     private Rectangle[][] rectangles;
     private Pixel[][] pixels;
@@ -116,29 +115,78 @@ public class PainterCanvas {
     }
 
 
-    public void loadImage(Image loadedImage) {
-        setPainterCanvasDefaultPosition();
-        setGridLineVisible(false);
-        clear();
+    public void saveCanvas() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("C:\\Painter project\\project.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            this.writeObject(out);
+            out.close();
+            fileOut.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
-        setCanvasSize(loadedImage.getWidth(), loadedImage.getHeight());
+    }
 
-        PixelReader loadedImagePixelReader = loadedImage.getPixelReader();
-        for (int x = 0; x < rectangles.length; x++) {
-            for (int y = 0; y < rectangles[0].length; y++) {
+    private void writeObject(ObjectOutputStream obj) throws IOException {
+        obj.writeDouble(canvas.getWidth());
+        obj.writeDouble(canvas.getHeight());
 
-                int corr = Painter.GET_RECT_SIZE() / 2;
-                int pixelPosX = x * Painter.GET_RECT_SIZE() + corr;
-                int pixelPosY = y * Painter.GET_RECT_SIZE() + corr;
+        obj.writeInt(rectangles.length);
+        obj.writeInt(rectangles[0].length);
 
-                rectangles[x][y].setColor
-                        (loadedImagePixelReader.getColor(pixelPosX, pixelPosY));
+        for (int i = 0; i < rectangles.length; i++) {
+            for (int j = 0; j < rectangles[0].length; j++) {
+                try {
+                    obj.writeObject(rectangles[i][j]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        setGridLineVisible(true);
-        paint();
     }
+
+
+    public void loadCanvas() {
+        try {
+            FileInputStream fileIn = new FileInputStream("C:\\Painter project\\project.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            this.readObject(in);
+            in.close();
+            fileIn.close();
+        } catch (IOException | ClassNotFoundException i) {
+            i.printStackTrace();
+        }
+    }
+
+    private void readObject(ObjectInputStream obj) throws IOException, ClassNotFoundException {
+        setCanvasSize(obj.readDouble(), obj.readDouble());
+
+        Rectangle [][] rectangles = new Rectangle[obj.readInt()][obj.readInt()];
+        for (int i = 0; i < rectangles.length; i++) {
+            for(int j = 0; j < rectangles[0].length; j++) {
+                rectangles[i][j] = ((Rectangle) obj.readObject());
+            }
+        }
+
+        this.rectangles = rectangles;
+        pixels = createPixels();
+
+        pixelGraphicWriter = canvas.getGraphicsContext2D().getPixelWriter();
+
+        isGridLineVisible = true;
+        gridLinesColor = Painter.GET_GRID_LINES_COLOR();
+        currentRectangleColor = Color.BLACK;
+
+        canvas.setOnMousePressed(new CanvasMousePressed(this));
+        canvas.setOnMouseDragged(new CanvasMouseDragged(this));
+        canvas.setOnScroll(new CanvasMouseScroll(this));
+
+        paint();
+
+    }
+
 
     public RenderedImage getSnapshotImage() {
         setPainterCanvasDefaultPosition();

@@ -3,26 +3,33 @@ package com.thunderTECH.Painter8Bit.model;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
-public class Rectangle {
-    private final int width;
-    private final int height;
-    private final int x;
-    private final int y;
-    private final Pixel[][] pixels;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Rectangle implements Serializable {
+    private int width;
+    private int height;
+    private int x;
+    private int y;
+    private transient Pixel[][] pixels;
     private Color color;
 
     public Rectangle(int x, int y, int width, int height, Color color) {
         this.width = width;
         this.height = height;
+
         this.x = x * this.width;
         this.y = y * this.height;
-        this.color = color;
-        pixels = new Pixel[width][height];
 
+        this.color = color;
+
+        pixels = new Pixel[width][height];
         // fill rectangle with pixels
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                pixels[i][j] = new Pixel(i+this.x,j+this.y,this.color, this);
+                pixels[i][j] = new Pixel(i+this.x,j+this.y,color, this);
             }
         }
     }
@@ -32,7 +39,7 @@ public class Rectangle {
 
         for (Pixel[] pixels : this.pixels) {
             for (Pixel pixel : pixels)
-                pixel.paint(pixelGraphicWriter, this.color);
+                pixel.paint(pixelGraphicWriter, color);
         }
     }
 
@@ -60,6 +67,22 @@ public class Rectangle {
             for(Pixel pixel : pixels)
                 pixel.setColor(color);
         }
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public Color getColor() {
@@ -102,5 +125,38 @@ public class Rectangle {
                 ", y=" + y +
                 ", color=" + color +
                 '}';
+    }
+
+    private void writeObject(ObjectOutputStream obj) throws IOException {
+        obj.writeInt(getWidth());
+        obj.writeInt(getHeight());
+
+        obj.writeInt(getX());
+        obj.writeInt(getY());
+
+        obj.writeDouble(color.getRed());
+        obj.writeDouble(color.getGreen());
+        obj.writeDouble(color.getBlue());
+        obj.writeDouble(color.getOpacity());
+    }
+
+    private void readObject(ObjectInputStream obj) throws IOException, ClassNotFoundException {
+        setWidth(obj.readInt());
+        setHeight(obj.readInt());
+
+        setX(obj.readInt());
+        setY(obj.readInt());
+
+        Color color = Color.color(obj.readDouble(), obj.readDouble(), obj.readDouble(), obj.readDouble());
+
+        pixels = new Pixel[width][height];
+        // fill rectangle with pixels
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                pixels[i][j] = new Pixel(i+this.x,j+this.y,color, this);
+            }
+        }
+
+        setColor(color);
     }
 }
