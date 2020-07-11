@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Painter extends Application {
+    private static Stage STAGE;
     private static int RECT_SIZE = 10; //SIZExSIZE rect
     private static int CANVAS_WIDTH = 800;
     private static int CANVAS_HEIGHT = 600;
@@ -22,6 +24,8 @@ public class Painter extends Application {
 
     @Override
     public void start(Stage stage) {
+        STAGE = stage;
+
         Scene scene = new Scene(Viewer.GET_VIEW_PANE(),1280,720);
         stage.setScene(scene);
         stage.setTitle("[8BitPainter]");
@@ -48,15 +52,27 @@ public class Painter extends Application {
     }
 
     public static void SAVE_PROJECT(PainterCanvas painterCanvas) {
-        painterCanvas.saveCanvas();
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showSaveDialog(STAGE);
+        //Filter for saving in .ser file format
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
+        fileChooser.getExtensionFilters().add(extFilter);
 
-        System.out.println("Project saved to c:\\Painter project\\");
+        String pathToFile = selectedFile.getPath();
+
+        painterCanvas.saveCanvas(pathToFile);
     }
 
     public static void LOAD_PROJECT(PainterCanvas painterCanvas) {
-        painterCanvas.loadCanvas();
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(STAGE);
+        //Filter for showing only .ser files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
+        fileChooser.getExtensionFilters().add(extFilter);
 
-        System.out.println("Project loaded!");
+        String pathToFile = selectedFile.getPath();
+
+        painterCanvas.loadCanvas(pathToFile);
     }
 
     public static int GET_CANVAS_WIDTH() {

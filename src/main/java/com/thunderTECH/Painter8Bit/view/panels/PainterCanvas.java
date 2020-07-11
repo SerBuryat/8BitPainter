@@ -115,9 +115,9 @@ public class PainterCanvas implements Serializable {
     }
 
 
-    public void saveCanvas() {
+    public void saveCanvas(String pathToFile) {
         try {
-            FileOutputStream fileOut = new FileOutputStream("C:\\Painter project\\project.ser");
+            FileOutputStream fileOut = new FileOutputStream(pathToFile);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             this.writeObject(out);
             out.close();
@@ -148,9 +148,9 @@ public class PainterCanvas implements Serializable {
     }
 
 
-    public void loadCanvas() {
+    public void loadCanvas(String pathToFile) {
         try {
-            FileInputStream fileIn = new FileInputStream("C:\\Painter project\\project.ser");
+            FileInputStream fileIn = new FileInputStream(pathToFile);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             this.readObject(in);
             in.close();
