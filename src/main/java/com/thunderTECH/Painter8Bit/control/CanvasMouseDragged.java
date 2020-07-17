@@ -1,5 +1,6 @@
 package com.thunderTECH.Painter8Bit.control;
 
+import com.thunderTECH.Painter8Bit.ActionBuffer;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.event.EventHandler;
@@ -20,6 +21,7 @@ public class CanvasMouseDragged implements EventHandler<MouseEvent> {
 
         if(pixel != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY)
+                ActionBuffer.ADD_TO_BUFFER(pixel.getRectangle());
                 painterCanvas.paint(pixel.getRectangle(), painterCanvas.getCurrentRectangleColor());
         }
 

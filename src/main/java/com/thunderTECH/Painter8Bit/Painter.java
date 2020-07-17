@@ -4,9 +4,7 @@ import com.thunderTECH.Painter8Bit.view.Viewer;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -16,10 +14,10 @@ import java.io.IOException;
 
 public class Painter extends Application {
     private static Stage STAGE;
-    private static int RECT_SIZE = 10; //SIZExSIZE rect
-    private static int CANVAS_WIDTH = 800;
-    private static int CANVAS_HEIGHT = 600;
-    private static final Color GRID_LINES_COLOR = Color.LIGHTGRAY;
+    private static int RECT_SIZE = 11; //SIZExSIZE rect
+    private static int CANVAS_WIDTH = 337;
+    private static int CANVAS_HEIGHT = 113;
+    private static final Color GRID_LINES_COLOR = Color.LIGHTGREY;
     private static final Color RECT_COLOR = Color.TRANSPARENT;
 
     @Override
@@ -38,6 +36,8 @@ public class Painter extends Application {
     }
 
     public static void SAVE_PAINTER_CANVAS_IMAGE_AS_PNG(PainterCanvas painterCanvas) {
+        SAVE_PROJECT(painterCanvas);
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
         File file = fileChooser.showSaveDialog(null);

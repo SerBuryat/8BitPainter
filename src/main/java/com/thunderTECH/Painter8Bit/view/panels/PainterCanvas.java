@@ -1,9 +1,7 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.Painter;
-import com.thunderTECH.Painter8Bit.control.CanvasMouseDragged;
-import com.thunderTECH.Painter8Bit.control.CanvasMousePressed;
-import com.thunderTECH.Painter8Bit.control.CanvasMouseScroll;
+import com.thunderTECH.Painter8Bit.control.*;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
@@ -48,8 +46,13 @@ public class PainterCanvas implements Serializable {
         canvas.setOnMousePressed(new CanvasMousePressed(this));
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
         canvas.setOnScroll(new CanvasMouseScroll(this));
+        canvas.setOnMouseMoved(new CanvasMouseMoved(this));
+
+        canvas.setOnKeyPressed(new CanvasKeyboardPressed(this));
 
         paint();
+
+        canvas.requestFocus();
     }
 
     /** Paint single rectangle in given color **/
