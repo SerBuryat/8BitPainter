@@ -14,9 +14,9 @@ import java.io.IOException;
 
 public class Painter extends Application {
     private static Stage STAGE;
-    private static int RECT_SIZE = 11; //SIZExSIZE rect
-    private static int CANVAS_WIDTH = 337;
-    private static int CANVAS_HEIGHT = 113;
+    private static int RECT_SIZE = 10; //SIZExSIZE rect
+    private static int CANVAS_WIDTH = 800;
+    private static int CANVAS_HEIGHT = 600;
     private static final Color GRID_LINES_COLOR = Color.LIGHTGREY;
     private static final Color RECT_COLOR = Color.TRANSPARENT;
 

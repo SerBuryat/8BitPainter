@@ -1,5 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
+import com.thunderTECH.Painter8Bit.ActionBuffer;
 import com.thunderTECH.Painter8Bit.Painter;
 import com.thunderTECH.Painter8Bit.control.*;
 import com.thunderTECH.Painter8Bit.model.Pixel;
@@ -46,7 +47,6 @@ public class PainterCanvas implements Serializable {
         canvas.setOnMousePressed(new CanvasMousePressed(this));
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
         canvas.setOnScroll(new CanvasMouseScroll(this));
-        canvas.setOnMouseMoved(new CanvasMouseMoved(this));
 
         canvas.setOnKeyPressed(new CanvasKeyboardPressed(this));
 
@@ -71,6 +71,7 @@ public class PainterCanvas implements Serializable {
     }
     /** Clear all canvas **/
     public void clear() {
+        ActionBuffer.CLEAR_BUFFER();
         for(Rectangle[] rectangles : this.rectangles) {
             for (Rectangle rectangle : rectangles) {
                 paint(rectangle, Color.TRANSPARENT);
@@ -91,6 +92,8 @@ public class PainterCanvas implements Serializable {
 
     /** Sets default canvas position(remove scale and scroll params) **/
     public void setCanvasSize(double width, double height) {
+        clear();
+
         if(width > 800)
             width = 800;
         if(width < 100)
