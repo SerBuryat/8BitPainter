@@ -24,7 +24,9 @@ public class Painter extends Application {
     public void start(Stage stage) {
         STAGE = stage;
 
-        Scene scene = new Scene(Viewer.GET_VIEW_PANE(),1280,720);
+        PainterCanvas painterCanvas = new PainterCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
+
+        Scene scene = new Scene(new Viewer(painterCanvas).getPane(),1280,720);
         stage.setScene(scene);
         stage.setTitle("[8BitPainter]");
         stage.setResizable(false);
@@ -73,14 +75,6 @@ public class Painter extends Application {
         String pathToFile = selectedFile.getPath();
 
         painterCanvas.loadCanvas(pathToFile);
-    }
-
-    public static int GET_CANVAS_WIDTH() {
-        return CANVAS_WIDTH;
-    }
-
-    public static int GET_CANVAS_HEIGHT() {
-        return CANVAS_HEIGHT;
     }
 
     public static int GET_RECT_SIZE() {
