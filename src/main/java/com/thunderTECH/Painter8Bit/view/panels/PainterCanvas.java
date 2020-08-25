@@ -25,6 +25,7 @@ public class PainterCanvas implements Serializable {
     private boolean isGridLineVisible;
     private Color gridLinesColor;
     private Color currentRectangleColor;
+    private String fileName = "";
 
     // canvas mouse dragging params
     private double canvasDragX;
@@ -121,9 +122,10 @@ public class PainterCanvas implements Serializable {
     }
 
 
-    public void saveCanvas(String pathToFile) {
+    public void saveCanvas(String pathToFile,String fileName) {
         try {
-            FileOutputStream fileOut = new FileOutputStream(pathToFile);
+            this.setFileName(fileName);
+            FileOutputStream fileOut = new FileOutputStream(pathToFile + "/" + this.getFileName());
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             this.writeObject(out);
             out.close();
@@ -135,6 +137,8 @@ public class PainterCanvas implements Serializable {
     }
 
     private void writeObject(ObjectOutputStream obj) throws IOException {
+        obj.writeUTF(fileName);
+
         obj.writeDouble(canvas.getWidth());
         obj.writeDouble(canvas.getHeight());
 
@@ -150,7 +154,6 @@ public class PainterCanvas implements Serializable {
                 }
             }
         }
-
     }
 
 
@@ -167,6 +170,8 @@ public class PainterCanvas implements Serializable {
     }
 
     private void readObject(ObjectInputStream obj) throws IOException, ClassNotFoundException {
+        this.setFileName(obj.readUTF());
+
         setCanvasSize(obj.readDouble(), obj.readDouble());
 
         Rectangle [][] rectangles = new Rectangle[obj.readInt()][obj.readInt()];
@@ -211,6 +216,7 @@ public class PainterCanvas implements Serializable {
         paintGridLines();
 
         return SwingFXUtils.fromFXImage(snapshot, null);
+
     }
     /** remove blur effect from rectangles borders **/
     private void removeAntialiasingFromSnapshot(WritableImage snapshot) {
@@ -245,6 +251,14 @@ public class PainterCanvas implements Serializable {
 
     public Canvas getCanvas() {
         return canvas;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     public Rectangle getRectangle(int x, int y) {
