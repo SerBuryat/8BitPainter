@@ -48,7 +48,6 @@ public class PainterCanvas implements Serializable {
         canvas.setOnMousePressed(new CanvasMousePressed(this));
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
         canvas.setOnScroll(new CanvasMouseScroll(this));
-
         canvas.setOnKeyPressed(new CanvasKeyboardPressed(this));
 
         paint();
@@ -73,6 +72,7 @@ public class PainterCanvas implements Serializable {
     /** Clear all canvas **/
     public void clear() {
         ActionBuffer.CLEAR_BUFFER();
+        this.setFileName("");
         for(Rectangle[] rectangles : this.rectangles) {
             for (Rectangle rectangle : rectangles) {
                 paint(rectangle, Color.TRANSPARENT);
