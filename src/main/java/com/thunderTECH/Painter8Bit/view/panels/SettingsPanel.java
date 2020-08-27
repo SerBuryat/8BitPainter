@@ -1,6 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
-import com.thunderTECH.Painter8Bit.Painter;
+import com.thunderTECH.Painter8Bit.control.Painter;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -8,81 +8,81 @@ import javafx.scene.layout.GridPane;
 public class SettingsPanel extends GridPane {
 
 
-    public SettingsPanel(PainterCanvas paintPane) {
+    public SettingsPanel(Painter painter) {
         this.getStyleClass().add("settings-pane");
         this.getStylesheets().add("css-styles/settings-panel-style.css");
 
-        this.add(getSaveProjectButton(paintPane),0,0);
-        this.add(getLoadProjectButton(paintPane),1,0);
-        this.add(getSaveImageButton(paintPane),2,0);
-        this.add(getClearPainterCanvasButton(paintPane),3,0);
-        this.add(getCanvasGridLineVisibleCheckBox(paintPane), 4, 0);
-        this.add(getChangePainterCanvasSizePane(paintPane),5,0);
-        this.add(getDefaultPaintPanePosition(paintPane),6,0);
+        this.add(getSaveProjectButton(painter),0,0);
+        this.add(getLoadProjectButton(painter),1,0);
+        this.add(getSaveImageButton(painter),2,0);
+        this.add(getClearPainterCanvasButton(painter),3,0);
+        this.add(getCanvasGridLineVisibleCheckBox(painter), 4, 0);
+        this.add(getChangePainterCanvasSizePane(painter),5,0);
+        this.add(getDefaultPaintPanePosition(painter),6,0);
     }
 
-    private Button getSaveImageButton(PainterCanvas painterCanvas) {
+    private Button getSaveImageButton(Painter painter) {
         Button saveImageButton = new Button("Save project as png");
 
-        saveImageButton.setOnAction(event -> Painter.SAVE_PAINTER_CANVAS_IMAGE_AS_PNG(painterCanvas));
+        saveImageButton.setOnAction(event -> painter.savePainterCanvasImageAsPng());
 
         return saveImageButton;
     }
 
-    private Button getSaveProjectButton(PainterCanvas painterCanvas) {
+    private Button getSaveProjectButton(Painter painter) {
         Button saveImageButton = new Button("Save project");
 
-        saveImageButton.setOnAction(event -> Painter.SAVE_PROJECT(painterCanvas));
+        saveImageButton.setOnAction(event -> painter.saveProject());
 
         return saveImageButton;
     }
 
-    private Button getLoadProjectButton(PainterCanvas painterCanvas) {
+    private Button getLoadProjectButton(Painter painter) {
         Button saveImageButton = new Button("Load project");
 
-        saveImageButton.setOnAction(event -> Painter.LOAD_PROJECT(painterCanvas));
+        saveImageButton.setOnAction(event -> painter.loadProject());
 
         return saveImageButton;
     }
 
-    private Button getClearPainterCanvasButton(PainterCanvas painterCanvas) {
+    private Button getClearPainterCanvasButton(Painter painter) {
         Button clearPaintPaneButton = new Button("Clear panel");
-        clearPaintPaneButton.setOnAction(event -> painterCanvas.clear());
+        clearPaintPaneButton.setOnAction(event -> painter.clear());
 
         return clearPaintPaneButton;
     }
 
-    private CheckBox getCanvasGridLineVisibleCheckBox(PainterCanvas painterCanvas) {
+    private CheckBox getCanvasGridLineVisibleCheckBox(Painter painter) {
         CheckBox gridStrokesShowCheckBox = new CheckBox("Show paint grid");
-        gridStrokesShowCheckBox.setSelected(painterCanvas.isGridLineVisible());
+        gridStrokesShowCheckBox.setSelected(painter.isGridLineVisible());
         gridStrokesShowCheckBox.setOnAction(event -> {
-                painterCanvas.setGridLineVisible(gridStrokesShowCheckBox.isSelected());
-                painterCanvas.paint();
+                painter.setGridLineVisible(gridStrokesShowCheckBox.isSelected());
+                painter.repaint();
         });
 
         return gridStrokesShowCheckBox;
     }
 
-    private Button getDefaultPaintPanePosition(PainterCanvas painterCanvas) {
+    private Button getDefaultPaintPanePosition(Painter painter) {
         Button defaultSizePaintPaneButton = new Button("painterCanvas default position ");
 
-        defaultSizePaintPaneButton.setOnAction(action -> painterCanvas.setPainterCanvasDefaultPosition());
+        defaultSizePaintPaneButton.setOnAction(action -> painter.setPainterCanvasDefaultPosition());
 
         return defaultSizePaintPaneButton;
     }
 
-    private GridPane getChangePainterCanvasSizePane(PainterCanvas painterCanvas) {
+    private GridPane getChangePainterCanvasSizePane(Painter painter) {
         GridPane changePaintPaneSizePane = new GridPane();
 
         Label widthText = new Label("Width:");
         Label heightText = new Label("Height:");
 
-        TextField widthField = new TextField(String.valueOf((int)painterCanvas.getCanvas().getWidth()));
-        TextField heightField = new TextField(String.valueOf((int)painterCanvas.getCanvas().getHeight()));
+        TextField widthField = new TextField(String.valueOf((painter.getCanvasWidth())));
+        TextField heightField = new TextField(String.valueOf((painter.getCanvasHeight())));
 
         Button changeSizeButton = new Button("Change size");
         changeSizeButton.setOnAction(actionEvent ->
-                painterCanvas.setCanvasSize
+                painter.setCanvasSize
                         (Integer.parseInt(widthField.getText()),Integer.parseInt(heightField.getText())));
 
         changePaintPaneSizePane.add(widthText,0,0);

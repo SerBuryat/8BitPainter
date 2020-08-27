@@ -1,23 +1,24 @@
 package com.thunderTECH.Painter8Bit.view;
 
+import com.thunderTECH.Painter8Bit.control.Painter;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import com.thunderTECH.Painter8Bit.view.panels.SettingsPanel;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.scene.layout.BorderPane;
 
 public class Viewer {
-    private final PainterCanvas painterCanvas;
+    private final Painter painter;
     private final BorderPane viewPane;
 
 
-    public Viewer (PainterCanvas painterCanvas) {
-        this.painterCanvas = painterCanvas;
+    public Viewer (Painter painter) {
+        this.painter = painter;
 
         this.viewPane = new BorderPane();
-        InstrumentPane instrumentPane = new InstrumentPane(this.painterCanvas);
-        SettingsPanel settingsPanel = new SettingsPanel(this.painterCanvas);
+        InstrumentPane instrumentPane = new InstrumentPane(this.painter);
+        SettingsPanel settingsPanel = new SettingsPanel(this.painter);
 
-        viewPane.setCenter(this.painterCanvas.getCanvas());
+        painter.putCanvasOnPane(viewPane);
         viewPane.setRight(instrumentPane);
         viewPane.setTop(settingsPanel);
     }

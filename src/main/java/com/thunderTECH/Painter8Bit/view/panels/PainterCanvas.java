@@ -1,11 +1,12 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
-import com.thunderTECH.Painter8Bit.ActionBuffer;
-import com.thunderTECH.Painter8Bit.Painter;
-import com.thunderTECH.Painter8Bit.control.*;
+import com.thunderTECH.Painter8Bit.control.Painter;
+import com.thunderTECH.Painter8Bit.control.events.CanvasKeyboardPressed;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMouseDragged;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMousePressed;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMouseScroll;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
-import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -24,8 +25,8 @@ public class PainterCanvas implements Serializable {
     private Pixel[][] pixels;
     private boolean isGridLineVisible;
     private Color gridLinesColor;
-    private Color currentRectangleColor;
-    private String fileName = "";
+    private Color currentColor;
+    private String fileName;
 
     // canvas mouse dragging params
     private double canvasDragX;
@@ -35,6 +36,8 @@ public class PainterCanvas implements Serializable {
 
 
     public PainterCanvas(int width, int height) {
+        fileName = "";
+
         canvas = createCanvas(width,height);
         rectangles = createRectangles();
         pixels = createPixels();
@@ -43,7 +46,7 @@ public class PainterCanvas implements Serializable {
 
         isGridLineVisible = true;
         gridLinesColor = Painter.GET_GRID_LINES_COLOR();
-        currentRectangleColor = Color.BLACK;
+        currentColor = Color.BLACK;
 
         canvas.setOnMousePressed(new CanvasMousePressed(this));
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
@@ -71,8 +74,6 @@ public class PainterCanvas implements Serializable {
     }
     /** Clear all canvas **/
     public void clear() {
-        ActionBuffer.CLEAR_BUFFER();
-        this.setFileName("");
         for(Rectangle[] rectangles : this.rectangles) {
             for (Rectangle rectangle : rectangles) {
                 paint(rectangle, Color.TRANSPARENT);
@@ -188,7 +189,7 @@ public class PainterCanvas implements Serializable {
 
         isGridLineVisible = true;
         gridLinesColor = Painter.GET_GRID_LINES_COLOR();
-        currentRectangleColor = Color.BLACK;
+        currentColor = Color.BLACK;
 
         canvas.setOnMousePressed(new CanvasMousePressed(this));
         canvas.setOnMouseDragged(new CanvasMouseDragged(this));
@@ -230,13 +231,12 @@ public class PainterCanvas implements Serializable {
     }
 
 
-    public void setCurrentRectangleColor(Color currentRectangleColor) {
-        this.currentRectangleColor = currentRectangleColor;
-        ColorsPalette.showCurrentColorOnPalette(currentRectangleColor);
+    public void setCurrentRectColor(Color color) {
+        this.currentColor = color;
     }
 
-    public Color getCurrentRectangleColor() {
-        return currentRectangleColor;
+    public Color getCurrentRectColor() {
+        return currentColor;
     }
 
 
@@ -327,7 +327,7 @@ public class PainterCanvas implements Serializable {
 
         int rectWidth = Painter.GET_RECT_SIZE();
         int rectHeight = Painter.GET_RECT_SIZE();
-        Color rectColor = Painter.GET_RECT_COLOR();
+        Color rectColor = Painter.GET_DEFAULT_RECT_COLOR();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {

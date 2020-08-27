@@ -1,4 +1,4 @@
-package com.thunderTECH.Painter8Bit.control;
+package com.thunderTECH.Painter8Bit.control.events;
 
 import com.thunderTECH.Painter8Bit.ActionBuffer;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
