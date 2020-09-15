@@ -1,6 +1,10 @@
 package com.thunderTECH.Painter8Bit.control;
 
 import com.thunderTECH.Painter8Bit.ActionBuffer;
+import com.thunderTECH.Painter8Bit.control.events.CanvasKeyboardPressed;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMouseDragged;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMousePressed;
+import com.thunderTECH.Painter8Bit.control.events.CanvasMouseScroll;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
 import com.thunderTECH.Painter8Bit.view.Viewer;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
@@ -35,6 +39,13 @@ public class Painter extends Application {
 
 
     public Painter() {
+        painterCanvas = new PainterCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
+
+        new CanvasMousePressed(painterCanvas);
+        new CanvasKeyboardPressed(painterCanvas);
+        new CanvasMouseDragged(painterCanvas);
+        new CanvasMouseScroll(painterCanvas);
+
         //Set app style
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
     }
@@ -42,8 +53,6 @@ public class Painter extends Application {
     @Override
     public void start(Stage stage) {
         STAGE = stage;
-
-        painterCanvas = new PainterCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
 
         Scene scene = new Scene(new Viewer(this).getPane(),1280,720);
         stage.setScene(scene);

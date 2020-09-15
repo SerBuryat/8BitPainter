@@ -14,6 +14,7 @@ public class CanvasMouseDragged implements EventHandler<MouseEvent> {
 
     public CanvasMouseDragged(PainterCanvas painterCanvas) {
         this.painterCanvas = painterCanvas;
+        this.painterCanvas.getCanvas().setOnMouseDragged(this);
     }
 
     @Override

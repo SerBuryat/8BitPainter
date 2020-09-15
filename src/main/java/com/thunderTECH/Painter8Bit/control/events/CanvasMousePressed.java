@@ -14,6 +14,7 @@ public class CanvasMousePressed implements EventHandler<MouseEvent> {
 
     public CanvasMousePressed(PainterCanvas painterCanvas) {
         this.painterCanvas = painterCanvas;
+        this.painterCanvas.getCanvas().setOnMousePressed(this);
     }
 
     @Override

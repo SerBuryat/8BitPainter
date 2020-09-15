@@ -10,6 +10,7 @@ public class CanvasMouseScroll implements EventHandler<ScrollEvent> {
 
     public CanvasMouseScroll(PainterCanvas painterCanvas) {
         this.painterCanvas = painterCanvas;
+        this.painterCanvas.getCanvas().setOnScroll(this);
     }
 
     @Override

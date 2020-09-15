@@ -12,6 +12,7 @@ public class CanvasKeyboardPressed implements EventHandler<KeyEvent> {
 
     public CanvasKeyboardPressed(PainterCanvas painterCanvas) {
         this.painterCanvas = painterCanvas;
+        this.painterCanvas.getCanvas().setOnKeyPressed(this);
     }
     @Override
     public void handle(KeyEvent keyEvent) {

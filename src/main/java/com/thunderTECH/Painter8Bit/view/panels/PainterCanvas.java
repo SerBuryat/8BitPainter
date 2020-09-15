@@ -48,11 +48,6 @@ public class PainterCanvas implements Serializable {
         gridLinesColor = Painter.GET_GRID_LINES_COLOR();
         currentColor = Color.BLACK;
 
-        canvas.setOnMousePressed(new CanvasMousePressed(this));
-        canvas.setOnMouseDragged(new CanvasMouseDragged(this));
-        canvas.setOnScroll(new CanvasMouseScroll(this));
-        canvas.setOnKeyPressed(new CanvasKeyboardPressed(this));
-
         paint();
 
         canvas.requestFocus();
@@ -261,7 +256,7 @@ public class PainterCanvas implements Serializable {
         return fileName;
     }
 
-    public Rectangle getRectangle(int x, int y) {
+    public Rectangle getRectangleByCoordinates(int x, int y) {
         int posX = x / Painter.GET_RECT_SIZE();
         int posY = y / Painter.GET_RECT_SIZE();
 
@@ -343,7 +338,7 @@ public class PainterCanvas implements Serializable {
 
         for(int x = 0; x < canvas.getWidth(); x++) {
             for(int y = 0; y < canvas.getHeight(); y++) {
-                pixels[x][y] = getRectangle(x,y).getPixel(x,y);
+                pixels[x][y] = getRectangleByCoordinates(x,y).getPixel(x,y);
             }
         }
 
