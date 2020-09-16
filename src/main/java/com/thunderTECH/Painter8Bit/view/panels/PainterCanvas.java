@@ -1,7 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.control.Painter;
-import com.thunderTECH.Painter8Bit.control.events.CanvasKeyboardPressed;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMouseDragged;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMousePressed;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMouseScroll;
@@ -111,7 +110,7 @@ public class PainterCanvas implements Serializable {
         paint();
     }
 
-    public void setPainterCanvasDefaultPosition() {
+    public void setDefaultPosition() {
         canvas.getTransforms().clear();
         canvas.setTranslateX(0.0);
         canvas.setTranslateY(0.0);
@@ -186,17 +185,13 @@ public class PainterCanvas implements Serializable {
         gridLinesColor = Painter.GET_GRID_LINES_COLOR();
         currentColor = Color.BLACK;
 
-        canvas.setOnMousePressed(new CanvasMousePressed(this));
-        canvas.setOnMouseDragged(new CanvasMouseDragged(this));
-        canvas.setOnScroll(new CanvasMouseScroll(this));
-
         paint();
 
     }
 
 
     public RenderedImage getSnapshotImage() {
-        setPainterCanvasDefaultPosition();
+        setDefaultPosition();
         clearGridLines();
 
         //Pad the capture area
@@ -256,7 +251,7 @@ public class PainterCanvas implements Serializable {
         return fileName;
     }
 
-    public Rectangle getRectangleByCoordinates(int x, int y) {
+    public Rectangle getRectangle(int x, int y) {
         int posX = x / Painter.GET_RECT_SIZE();
         int posY = y / Painter.GET_RECT_SIZE();
 
@@ -338,7 +333,7 @@ public class PainterCanvas implements Serializable {
 
         for(int x = 0; x < canvas.getWidth(); x++) {
             for(int y = 0; y < canvas.getHeight(); y++) {
-                pixels[x][y] = getRectangleByCoordinates(x,y).getPixel(x,y);
+                pixels[x][y] = getRectangle(x,y).getPixel(x,y);
             }
         }
 

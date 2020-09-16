@@ -1,16 +1,16 @@
 package com.thunderTECH.Painter8Bit.control.events;
 
+import com.thunderTECH.Painter8Bit.control.Painter;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import javafx.event.EventHandler;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
 
 public class CanvasMouseScroll implements EventHandler<ScrollEvent> {
-    private final PainterCanvas painterCanvas;
+    private final Painter painter;
 
-    public CanvasMouseScroll(PainterCanvas painterCanvas) {
-        this.painterCanvas = painterCanvas;
-        this.painterCanvas.getCanvas().setOnScroll(this);
+    public CanvasMouseScroll(Painter painter) {
+        this.painter = painter;
     }
 
     @Override
@@ -27,9 +27,9 @@ public class CanvasMouseScroll implements EventHandler<ScrollEvent> {
 
         paintPaneScale.setPivotX(scrollEvent.getX());
         paintPaneScale.setPivotY(scrollEvent.getY());
-        paintPaneScale.setX(painterCanvas.getCanvas().getScaleX() * scaleFactor);
-        paintPaneScale.setY(painterCanvas.getCanvas().getScaleY() * scaleFactor);
+        paintPaneScale.setX(painter.getPainterCanvas().getCanvas().getScaleX() * scaleFactor);
+        paintPaneScale.setY(painter.getPainterCanvas().getCanvas().getScaleY() * scaleFactor);
 
-        painterCanvas.getCanvas().getTransforms().addAll(paintPaneScale);
+        painter.getPainterCanvas().getCanvas().getTransforms().addAll(paintPaneScale);
     }
 }

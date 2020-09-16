@@ -1,26 +1,20 @@
 package com.thunderTECH.Painter8Bit.control.events;
 
-import com.thunderTECH.Painter8Bit.ActionBuffer;
-import com.thunderTECH.Painter8Bit.model.Rectangle;
-import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
+import com.thunderTECH.Painter8Bit.control.Painter;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class CanvasKeyboardPressed implements EventHandler<KeyEvent> {
-    private final PainterCanvas painterCanvas;
+    private final Painter painter;
 
-    public CanvasKeyboardPressed(PainterCanvas painterCanvas) {
-        this.painterCanvas = painterCanvas;
-        this.painterCanvas.getCanvas().setOnKeyPressed(this);
+    public CanvasKeyboardPressed(Painter painter) {
+        this.painter = painter;
     }
     @Override
     public void handle(KeyEvent keyEvent) {
         if(keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.Z)) {
-            Rectangle rect = ActionBuffer.GET_LAST_ACTIONED_RECTANGLE();
-            if(rect != null) {
-                painterCanvas.paint(rect, rect.getColor());
-            }
+            painter.undoPaint();
         }
     }
 }

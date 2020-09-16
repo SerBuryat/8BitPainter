@@ -5,17 +5,16 @@ import com.thunderTECH.Painter8Bit.control.events.CanvasKeyboardPressed;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMouseDragged;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMousePressed;
 import com.thunderTECH.Painter8Bit.control.events.CanvasMouseScroll;
+import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
 import com.thunderTECH.Painter8Bit.view.Viewer;
 import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
+import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -41,12 +40,13 @@ public class Painter extends Application {
     public Painter() {
         painterCanvas = new PainterCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
 
-        new CanvasMousePressed(painterCanvas);
-        new CanvasKeyboardPressed(painterCanvas);
-        new CanvasMouseDragged(painterCanvas);
-        new CanvasMouseScroll(painterCanvas);
+        //Setup control events
+        painterCanvas.getCanvas().setOnMousePressed(new CanvasMousePressed(this));
+        painterCanvas.getCanvas().setOnMouseDragged(new CanvasMouseDragged(this));
+        painterCanvas.getCanvas().setOnKeyPressed(new CanvasKeyboardPressed(this));
+        painterCanvas.getCanvas().setOnScroll(new CanvasMouseScroll(this));
 
-        //Set app style
+        //Setup app style
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
     }
 
@@ -136,7 +136,16 @@ public class Painter extends Application {
     }
 
     public void paint(Rectangle rect, Color color) {
+        ActionBuffer.ADD_TO_BUFFER(rect);
+        InstrumentPane.ADD_LAST_USED_COLOR(color);
         painterCanvas.paint(rect, color);
+    }
+    /**'Unpaint' last painted rectangle**/
+    public void undoPaint() {
+        Rectangle rect = ActionBuffer.GET_LAST_ACTIONED_RECTANGLE();
+        if(rect != null) {
+            painterCanvas.paint(rect, rect.getColor());
+        }
     }
 
     public void repaint() {
@@ -153,6 +162,10 @@ public class Painter extends Application {
         ColorsPalette.SHOW_CURRENT_COLOR_ON_PALETTE(color);
     }
 
+    public Color getCurrentColor() {
+        return painterCanvas.getCurrentRectColor();
+    }
+
     public void putCanvasOnPane(BorderPane borderPane) {
         borderPane.setCenter(painterCanvas.getCanvas());
     }
@@ -166,7 +179,7 @@ public class Painter extends Application {
     }
 
     public void setPainterCanvasDefaultPosition() {
-        painterCanvas.setPainterCanvasDefaultPosition();
+        painterCanvas.setDefaultPosition();
     }
 
     public void setCanvasSize(int width, int height) {
@@ -179,5 +192,13 @@ public class Painter extends Application {
 
     public int getCanvasHeight() {
         return (int)painterCanvas.getCanvas().getHeight();
+    }
+
+    public Pixel getCanvasPixel(int x, int y) {
+        return painterCanvas.getPixel(x,y);
+    }
+
+    public PainterCanvas getPainterCanvas() {
+        return painterCanvas;
     }
 }

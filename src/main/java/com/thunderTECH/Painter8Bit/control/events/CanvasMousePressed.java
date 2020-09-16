@@ -1,8 +1,8 @@
 package com.thunderTECH.Painter8Bit.control.events;
 
 import com.thunderTECH.Painter8Bit.ActionBuffer;
+import com.thunderTECH.Painter8Bit.control.Painter;
 import com.thunderTECH.Painter8Bit.model.Pixel;
-import com.thunderTECH.Painter8Bit.view.panels.PainterCanvas;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
@@ -10,35 +10,35 @@ import javafx.scene.input.MouseEvent;
 
 
 public class CanvasMousePressed implements EventHandler<MouseEvent> {
-    private final PainterCanvas painterCanvas;
+    private final Painter painter;
 
-    public CanvasMousePressed(PainterCanvas painterCanvas) {
-        this.painterCanvas = painterCanvas;
-        this.painterCanvas.getCanvas().setOnMousePressed(this);
+    public CanvasMousePressed(Painter painter) {
+        this.painter = painter;
     }
 
     @Override
     public void handle(MouseEvent mouseEvent) {
-        painterCanvas.getCanvas().requestFocus();
+        painter.getPainterCanvas().getCanvas().requestFocus();
 
-        Pixel pixel = painterCanvas.getPixel((int)mouseEvent.getX(), (int)mouseEvent.getY());
+        Pixel pixel = painter.getCanvasPixel((int)mouseEvent.getX(), (int)mouseEvent.getY());
 
         if(pixel != null) {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                ActionBuffer.ADD_TO_BUFFER(pixel.getRectangle());
-                InstrumentPane.ADD_LAST_USED_COLOR(painterCanvas.getCurrentRectColor());
-                painterCanvas.paint(pixel.getRectangle(), painterCanvas.getCurrentRectColor());
+
+                painter.paint(pixel.getRectangle(), painter.getCurrentColor());
             }
 
             if (mouseEvent.getButton() == MouseButton.SECONDARY)
-                painterCanvas.setCurrentRectColor(pixel.getRectangle().getColor());
+                painter.setCurrentColor(pixel.getRectangle().getColor());
 
             if(mouseEvent.getButton() == MouseButton.MIDDLE) {
-                painterCanvas.setCanvasDragX(mouseEvent.getSceneX());
-                painterCanvas.setCanvasDragY(mouseEvent.getSceneY());
-                
-                painterCanvas.setCanvasTranslateX(painterCanvas.getCanvas().getTranslateX());
-                painterCanvas.setCanvasTranslateY(painterCanvas.getCanvas().getTranslateY());
+                painter.getPainterCanvas().setCanvasDragX(mouseEvent.getSceneX());
+                painter.getPainterCanvas().setCanvasDragY(mouseEvent.getSceneY());
+
+                painter.getPainterCanvas()
+                        .setCanvasTranslateX(painter.getPainterCanvas().getCanvas().getTranslateX());
+                painter.getPainterCanvas()
+                        .setCanvasTranslateY(painter.getPainterCanvas().getCanvas().getTranslateY());
             }
 
         }
