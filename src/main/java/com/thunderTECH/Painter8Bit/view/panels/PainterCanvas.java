@@ -1,9 +1,6 @@
 package com.thunderTECH.Painter8Bit.view.panels;
 
 import com.thunderTECH.Painter8Bit.control.Painter;
-import com.thunderTECH.Painter8Bit.control.events.CanvasMouseDragged;
-import com.thunderTECH.Painter8Bit.control.events.CanvasMousePressed;
-import com.thunderTECH.Painter8Bit.control.events.CanvasMouseScroll;
 import com.thunderTECH.Painter8Bit.model.Pixel;
 import com.thunderTECH.Painter8Bit.model.Rectangle;
 

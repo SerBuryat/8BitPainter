@@ -13,6 +13,8 @@ import com.thunderTECH.Painter8Bit.view.panels.instruments.ColorsPalette;
 import com.thunderTECH.Painter8Bit.view.panels.instruments.InstrumentPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -28,13 +30,14 @@ public class Painter extends Application {
     private static final Color GRID_LINES_COLOR = Color.LIGHTGREY;
     private static final Color DEFAULT_RECT_COLOR = Color.TRANSPARENT;
     private static final String PROJECTS_DIR = "c:/PixelPainter projects";
+    private boolean newProject = true;
 
     private static Stage STAGE;
-    private static int RECT_SIZE = 10; //SIZExSIZE rect
-    private static int CANVAS_WIDTH = 800;
-    private static int CANVAS_HEIGHT = 600;
+    private static final int RECT_SIZE = 10; //SIZExSIZE rect
+    private static final int CANVAS_WIDTH = 800;
+    private static final int CANVAS_HEIGHT = 600;
 
-    private PainterCanvas painterCanvas;
+    private final PainterCanvas painterCanvas;
 
 
     public Painter() {
@@ -64,20 +67,16 @@ public class Painter extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
     /** Save canvas picture like .png file **/
     public void savePainterCanvasImageAsPng() {
         this.saveProject();
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-        File file = fileChooser.showSaveDialog(null);
-
-        if(file != null){
-            try {
-                ImageIO.write(painterCanvas.getSnapshotImage(), "png", file);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            File file = new File(PROJECTS_DIR + "/" + painterCanvas.getFileName() + ".png");
+            ImageIO.write(painterCanvas.getSnapshotImage(), "png", file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
     /** Save project(canvas) to folder **/
@@ -85,29 +84,37 @@ public class Painter extends Application {
         // Create folder(if not exist)
         File projectsFolder = new File(PROJECTS_DIR);
         projectsFolder.mkdir();
-        // Get current canvas name(for saving file with this name)
+
         String canvasFileName = painterCanvas.getFileName();
 
-        //If current canvas doesn't have name (equals(""))
-        //Showing dialog for name input
-        if (canvasFileName.equals("")) {
+        //Showing dialog for name input if new project
+        if (newProject) {
             // Create dialog with properties
             TextInputDialog dialog = new TextInputDialog("File name");
             dialog.setHeaderText("File name chooser");
             dialog.setContentText("Please enter file name:");
             // Showing dialog
             Optional<String> result = dialog.showAndWait();
-            // Check user input
-            if (result.isPresent()){
+            // Check user input and name existence
+            if (result.isPresent()) {
                 canvasFileName = result.get();
-            } else
+
+                if(new File(PROJECTS_DIR + "/" + canvasFileName).exists()) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING,"Name already exists!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            } else {
                 dialog.close();
+            }
         }
         //Saving canvas with folder path and file name
         painterCanvas.saveCanvas(projectsFolder.getPath(), canvasFileName);
     }
     /** Load project(canvas) from selected file **/
     public void loadProject() {
+        newProject = false;
+
         // Open chooser
         FileChooser fileChooser = new FileChooser();
         // Set default directory
@@ -121,6 +128,8 @@ public class Painter extends Application {
         String pathToFile = selectedFile.getPath();
         // Send path to canvas
         painterCanvas.loadCanvas(pathToFile);
+
+        STAGE.setTitle("[8BitPainter]" + " - Project: " + painterCanvas.getFileName());
     }
     /** Get canvas rectangle size **/
     public static int GET_RECT_SIZE() {
@@ -153,6 +162,7 @@ public class Painter extends Application {
     }
 
     public void clear() {
+        newProject = true;
         ActionBuffer.CLEAR_BUFFER();
         painterCanvas.clear();
     }
