@@ -1,16 +1,17 @@
 .settings-pane {
     -fx-padding: 5px;
-    -fx-hgap: 5px;
+    -fx-margin: 10px;
+    -fx-hgap: 10px;
 }
 
-.button {
-    -fx-background-color: rgb(100,200,50);
+.menu-bar {
+    -fx-background-color: rgb(130,130,130);
+    -fx-background-radius: 10 10 10 10, 10 10 10 10, 10 10 10 10;
 }
 
-.button:hover {
-    -fx-background-color: rgb(90,180,50);
-}
+.menu-bar .label {
+    -fx-font-size: 14 pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: black;
 
-.button:pressed {
-    -fx-background-color: rgb(200,180,50);
 }

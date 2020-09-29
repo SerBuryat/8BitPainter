@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -68,7 +69,6 @@ public class Painter extends Application {
         launch(args);
     }
 
-
     /** Save canvas picture like .png file **/
     public void savePainterCanvasImageAsPng() {
         this.saveProject();
@@ -106,6 +106,11 @@ public class Painter extends Application {
                 }
             } else {
                 dialog.close();
+                try {
+                    throw new FileNotFoundException();
+                } catch (FileNotFoundException e) {
+                    return;
+                }
             }
         }
         //Saving canvas with folder path and file name
@@ -113,23 +118,28 @@ public class Painter extends Application {
     }
     /** Load project(canvas) from selected file **/
     public void loadProject() {
-        newProject = false;
-
         // Open chooser
         FileChooser fileChooser = new FileChooser();
         // Set default directory
         fileChooser.setInitialDirectory(new File(PROJECTS_DIR));
         // Showing dialog and get chosen file
         File selectedFile = fileChooser.showOpenDialog(STAGE);
-        //Filter for showing only .ser files
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
-        fileChooser.getExtensionFilters().add(extFilter);
-        //Get file path
-        String pathToFile = selectedFile.getPath();
-        // Send path to canvas
-        painterCanvas.loadCanvas(pathToFile);
 
-        STAGE.setTitle("[8BitPainter]" + " - Project: " + painterCanvas.getFileName());
+        if(selectedFile == null) {
+            return;
+        } else {
+            //Filter for showing only .ser files
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
+            fileChooser.getExtensionFilters().add(extFilter);
+            //Get file path
+            String pathToFile = selectedFile.getPath();
+            // Send path to canvas
+            painterCanvas.loadCanvas(pathToFile);
+
+            STAGE.setTitle("[8BitPainter]" + " - Project: " + painterCanvas.getFileName());
+
+            newProject = false;
+        }
     }
     /** Get canvas rectangle size **/
     public static int GET_RECT_SIZE() {
